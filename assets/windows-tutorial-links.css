@@ -1,0 +1,3 @@
+.top-nav{flex-wrap:wrap;row-gap:8px;padding-top:10px;padding-bottom:10px}
+.top-nav>div{flex-wrap:wrap;gap:8px 18px}
+.paper-links a[data-windows-tutorial]{border-color:#a9bfd9;color:#276bb3}

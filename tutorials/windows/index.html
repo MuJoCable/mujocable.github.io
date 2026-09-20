@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Set up VS Code, Python, MuJoCo and MuJoCable on Windows, then reproduce a cable-driven elbow simulation.">
+<title>Windows tutorial · MuJoCable</title><link rel="icon" href="/favicon.jpg">
+<link rel="canonical" href="https://mujocable.github.io/tutorials/windows/">
+<link rel="alternate" hreflang="en" href="https://mujocable.github.io/tutorials/windows/">
+<link rel="alternate" hreflang="zh-CN" href="https://mujocable.github.io/tutorials/windows/zh.html">
+<link rel="alternate" hreflang="x-default" href="https://mujocable.github.io/tutorials/windows/">
+<link rel="stylesheet" href="guide.css"><script defer src="guide.js"></script>
+</head><body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="site-header"><a class="brand" href="/">MuJoCable</a><nav aria-label="Tutorial navigation"><a href="/">Project home</a><span class="platform">Windows x64</span><a class="language-switch" href="zh.html" lang="zh-CN" hreflang="zh-CN">中文</a></nav></header>
+<div class="layout"><aside><strong>Contents</strong><div class="toc">
+<ul>
+<li><a href="#step-0">0. Choose a package and check your computer</a></li>
+<li><a href="#step-1">1. Install VS Code</a></li>
+<li><a href="#step-2">2. Install Python 3.12.10, 64-bit</a></li>
+<li><a href="#step-3">3. Extract the project and open the correct folder</a></li>
+<li><a href="#step-4">4. Create an isolated Python environment</a></li>
+<li><a href="#step-5">5. Install MuJoCo and dependencies</a></li>
+<li><a href="#step-6">6. Install and verify the MuJoCable plugin</a></li>
+<li><a href="#step-7">7. Run the elbow demo</a></li>
+<li><a href="#step-8">8. Record a full run and verify results</a></li>
+<li><a href="#step-9">9. Export video, GIF, and snapshots</a></li>
+<li><a href="#step-10">10. Understand the data and editing points</a></li>
+<li><a href="#step-11">11. Troubleshooting</a></li>
+<li><a href="#step-12">12. Add the plugin to an existing project</a></li>
+<li><a href="#step-13">13. Quick start with the portable package</a></li>
+<li><a href="#step-14">14. Reproduction checklist</a></li>
+<li><a href="#step-15">15. Validation status and model scope</a></li>
+</ul>
+</div>
+</aside>
+<main id="content"><div class="eyebrow">WINDOWS · SETUP &amp; SIMULATION</div>
+<div class="toolbar"><a class="primary" href="https://github.com/MuJoCable/mujocable.github.io/releases/download/windows-tutorial-v1/MuJoCable_Elbow_Windows_Project.zip">Download project</a><a href="../../docs/windows/en.md">Markdown source</a><button class="print-button" type="button">Print / save PDF</button></div>
+<h1 id="mujocable-on-windows-from-setup-to-an-elbow-simulation">MuJoCable on Windows: from setup to an elbow simulation</h1>
+<p>For Windows users setting up MuJoCable for the first time and editing models in VS Code. Tutorial version: September 20, 2026.</p>
+<p>By the end, you will have an isolated Python environment, a working four-cable elbow model, and a repeatable workflow for flexing, returning, releasing the drive cables, and exporting data and video.</p>
+<p><strong>Workflow: VS Code → Python → project files → virtual environment → MuJoCo → cable plugin → elbow demo → results.</strong> This guide uses native Windows. WSL, Linux, Conda, and a C++ compiler are not required.</p>
+<h2 id="step-0">0. Choose a package and check your computer</h2>
+<h3 id="what-each-component-does">What each component does</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+<th>Installation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VS Code</td>
+<td>Edit Python and MJCF; run and debug scripts</td>
+<td>Windows desktop installer</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>Execute the simulation controller</td>
+<td>Python 3.12.10 x64 installer</td>
+</tr>
+<tr>
+<td>MuJoCo</td>
+<td>Rigid-body physics engine</td>
+<td>Install version 3.4.0 with pip in the project environment</td>
+</tr>
+<tr>
+<td>MuJoCable</td>
+<td>Cable mechanics, surface routing, and cable-length actuation</td>
+<td>Project-local Windows DLL loaded by Python</td>
+</tr>
+<tr>
+<td>Elbow demo</td>
+<td>MJCF, meshes, four cables, and controller</td>
+<td>Tutorial project archive</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>VS Code Python extension</strong> and <strong>MuJoCable</strong> are different components. Install the former from the VS Code Extensions view. MuJoCable is a MuJoCo engine plugin, not a VS Code extension.</p>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li>Windows 10 or 11 on an Intel/AMD x64 computer. Check <strong>Settings → System → About → System type</strong>. This is not a 32-bit Python or native Windows ARM64 package.</li>
+<li>A working OpenGL graphics driver for the viewer and video export. You can check headless simulation separately.</li>
+<li>Internet access to download VS Code, Python, and pip dependencies. Once installed, the supplied simulation runs offline.</li>
+<li>A short, writable path is recommended, such as <code>C:\work\elbow_demo</code>. <strong>C: is not required</strong>: <code>D:\work\elbow_demo</code> or another drive works too. Short ASCII paths avoid problems in third-party file interfaces.</li>
+</ul>
+<h3 id="downloads">Downloads</h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Download</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VS Code</td>
+<td><a href="https://code.visualstudio.com/download">Official download page</a></td>
+<td>Windows → User Installer → x64</td>
+</tr>
+<tr>
+<td>Python 3.12.10</td>
+<td><a href="https://www.python.org/downloads/release/python-31210/">Release page</a> · <a href="https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe">64-bit installer</a></td>
+<td>Windows installer (64-bit)</td>
+</tr>
+<tr>
+<td><strong>Tutorial project</strong></td>
+<td><a href="https://github.com/MuJoCable/mujocable.github.io/releases/download/windows-tutorial-v1/MuJoCable_Elbow_Windows_Project.zip">MuJoCable_Elbow_Windows_Project.zip</a></td>
+<td>Recommended for development; includes model, DLL, scripts, and VS Code configuration, without Python</td>
+</tr>
+<tr>
+<td>Portable demo</td>
+<td><a href="https://github.com/MuJoCable/mujocable.github.io/releases/download/windows-tutorial-v1/MuJoCable_Windows_x64.zip">MuJoCable_Windows_x64.zip</a></td>
+<td>Includes Python; quick-start option in section 13</td>
+</tr>
+<tr>
+<td>Plugin only</td>
+<td><a href="https://github.com/MuJoCable/mujocable.github.io/releases/download/windows-tutorial-v1/MuJoCable_plugin_Windows_x64.zip">MuJoCable_plugin_Windows_x64.zip</a></td>
+<td>For an existing MuJoCo project; section 12</td>
+</tr>
+<tr>
+<td>Upstream plugin source</td>
+<td><a href="https://github.com/MuJoCable/mujoco-cable-dynamics/releases/tag/v0.2.0">MuJoCable v0.2.0 Release</a></td>
+<td>Source used for this DLL; no compilation needed for this guide</td>
+</tr>
+</tbody>
+</table>
+<p>Archives are distributed through a GitHub Release of this website repository. Choose the tutorial project for the main workflow; you do not need all three packages.</p>
+<p>This Windows DLL is an <strong>adapted build of upstream v0.2.0 plus the elbow cylinder-routing patch</strong>, not an unchanged upstream prebuilt asset. Source, patches, and license notices are included.</p>
+<h2 id="step-1">1. Install VS Code</h2>
+<ol>
+<li>Open the <a href="https://code.visualstudio.com/download">VS Code download page</a>. Select <strong>Windows / User Installer / x64</strong> to download the desktop <code>.exe</code> installer.</li>
+<li>Run <code>VSCodeUserSetup-…-x64.exe</code> and follow the installer. User Installer installs for the current account.</li>
+<li>Keep <strong>Add to PATH</strong> selected if shown. Explorer context-menu entries are optional.</li>
+<li>Start VS Code. Reopen any terminals that were already running so they receive the updated PATH.</li>
+<li>Open Extensions with <code>Ctrl+Shift+X</code>. Search for <strong>Python</strong>, published by <strong>Microsoft</strong>, with extension ID <code>ms-python.python</code>, and install it.</li>
+<li>Check that Microsoft's <strong>Python Debugger</strong> (<code>ms-python.debugpy</code>) is also installed; it is used for F5 debugging.</li>
+</ol>
+<p><strong>Checkpoint:</strong> VS Code opens and the Microsoft Python extension is installed. The Python interpreter is installed separately in the next section.</p>
+<p>References: <a href="https://code.visualstudio.com/docs/setup/windows">VS Code Windows installation</a>, <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python">Microsoft Python extension</a>.</p>
+<h2 id="step-2">2. Install Python 3.12.10, 64-bit</h2>
+<p>This guide pins Python 3.12.10 x64 to match the tested baseline. It is not a claim that this is the latest Python release.</p>
+<ol>
+<li>On the <a href="https://www.python.org/downloads/release/python-31210/">Python 3.12.10 release page</a>, choose <strong>Windows installer (64-bit)</strong> under Files. The filename is <code>python-3.12.10-amd64.exe</code>.</li>
+<li>Run it, select <strong>Add python.exe to PATH</strong>, and choose <strong>Install Now</strong>. Retain pip and the Python launcher installation options.</li>
+<li>When installation finishes, reopen VS Code.</li>
+<li>Select <strong>Terminal → New Terminal</strong> and use a PowerShell terminal.</li>
+<li>Run these commands, one line at a time:</li>
+</ol>
+<pre><code class="language-powershell">py -3.12 --version
+py -3.12 -c &quot;import struct; print(struct.calcsize('P') * 8)&quot;
+</code></pre>
+<p>Expected output: <code>Python 3.12.10</code>, then <code>64</code>. The <code>py -3.12</code> command explicitly selects Python 3.12 when several versions are installed.</p>
+<p><strong>Use the standard installer, not the embeddable package, for this workflow.</strong> The standard installation supplies pip and venv. The embedded interpreter in the portable demo serves a different purpose.</p>
+<p>If <code>py</code> is not recognized, reopen the terminal and check that the Python launcher is installed. Alternatively, use the interpreter's actual full path. A common per-user installation path is:</p>
+<pre><code class="language-powershell">&amp; &quot;$env:LOCALAPPDATA\Programs\Python\Python312\python.exe&quot; --version
+</code></pre>
+<p>If you chose another installation directory, use that path instead.</p>
+<h2 id="step-3">3. Extract the project and open the correct folder</h2>
+<ol>
+<li>Download <strong>MuJoCable_Elbow_Windows_Project.zip</strong> from section 0.</li>
+<li>In File Explorer, right-click the archive and select <strong>Extract All</strong>.</li>
+<li>Locate the extracted folder that directly contains <code>run_demo.py</code>. Move it to <code>C:\work</code> and rename it <code>elbow_demo</code>, or choose another writable location.</li>
+<li>In VS Code, select <strong>File → Open Folder</strong> and open that project folder.</li>
+<li>Accept Workspace Trust only after confirming that the files came from the linked MuJoCable repository.</li>
+</ol>
+<p>The project layout is:</p>
+<pre><code class="language-text">C:\work\elbow_demo\
+├─ .vscode\                    Interpreter and debugging configuration
+├─ requirements-windows.txt    Pinned Python dependencies
+├─ check_mujoco.py             Check base MuJoCo only
+├─ check_env.py                Check cable plugin and elbow model
+├─ mujocable_plugin.py         Windows DLL loader
+├─ runtime.py                  Project model-loading entry point
+├─ run_demo.py                 Elbow controller and data recording
+├─ verify_results.py           Compare results with the reference
+├─ render_video.py             Export video, GIF, and snapshots
+├─ open_model.py               Generic viewer for other XML models
+├─ plugin\cable_unilateral.dll Cable plugin
+├─ msvcp140.dll                App-local C++ runtime libraries
+├─ vcruntime140.dll
+├─ vcruntime140_1.dll
+├─ model\elbow.xml             Elbow MJCF
+├─ model\assets\               Exported meshes
+├─ examples\single_pulley.xml  Small cable example
+├─ reference\                  Baseline data and video
+└─ validation\                 Test evidence
+</code></pre>
+<p>The commands below use C: as an example. If you chose D:, change the path after <code>Set-Location</code>; subsequent relative commands starting with <code>.\</code> stay the same. VS Code, Python, and the project may reside on different drives.</p>
+<pre><code class="language-powershell">Set-Location C:\work\elbow_demo
+Test-Path .\run_demo.py
+Test-Path .\plugin\cable_unilateral.dll
+</code></pre>
+<p>Both checks should return <code>True</code>. If either returns <code>False</code>, fix the working directory before continuing. Open the folder containing <code>run_demo.py</code>, not its parent.</p>
+<h2 id="step-4">4. Create an isolated Python environment</h2>
+<p>From the project root, run:</p>
+<pre><code class="language-powershell">py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe --version
+.\.venv\Scripts\python.exe -c &quot;import sys; print(sys.executable)&quot;
+</code></pre>
+<p>The last command should print your project's <code>.venv\Scripts\python.exe</code>. If <code>py</code> is unavailable, replace <code>py -3.12</code> in the first command with the standard Python interpreter's full path.</p>
+<p><strong>All subsequent commands explicitly use <code>.\.venv\Scripts\python.exe</code>.</strong> You do not need to run <code>Activate.ps1</code> or change PowerShell execution policy. Do not copy the terminal's <code>PS C:\…&gt;</code> prompt into commands.</p>
+<p>Select the same interpreter in VS Code:</p>
+<ol>
+<li>Press <code>Ctrl+Shift+P</code>.</li>
+<li>Run <strong>Python: Select Interpreter</strong>.</li>
+<li>Select the project's <code>.venv</code>. If missing, choose <strong>Enter interpreter path</strong> and locate its <code>Scripts\python.exe</code>.</li>
+</ol>
+<p>The selected interpreter controls VS Code execution and language features. Explicit terminal paths ensure that installation and execution use the intended environment. See <a href="https://docs.python.org/3.12/library/venv.html">Python venv</a> and <a href="https://code.visualstudio.com/docs/python/environments">VS Code environments</a>.</p>
+<p>If you move the project after creating <code>.venv</code>, recreate the environment and reinstall dependencies at the new location. Do not transfer an existing <code>.venv</code> between directories or computers.</p>
+<h2 id="step-5">5. Install MuJoCo and dependencies</h2>
+<p>Run each line only after the preceding command succeeds:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install --only-binary=:all: -r .\requirements-windows.txt
+.\.venv\Scripts\python.exe -m pip check
+</code></pre>
+<p>The requirements include <strong>MuJoCo 3.4.0, NumPy 2.2.6, Pillow 11.3.0, and imageio-ffmpeg 0.6.0</strong>, with pinned supporting packages. <code>--only-binary=:all:</code> uses prebuilt wheels and avoids an unexpected compiler setup. If no matching wheel is available, check Python version, architecture, and package-index connectivity.</p>
+<p>The last command should report <code>No broken requirements found.</code> Then check the base engine:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe .\check_mujoco.py
+</code></pre>
+<p>Expected output includes:</p>
+<pre><code class="language-text">MuJoCo: 3.4.0
+PASS: base MuJoCo advanced 100 steps; no cable plugin loaded.
+</code></pre>
+<p>This simulates a small sphere without registering the cable plugin. It distinguishes engine-installation problems from cable-plugin or model problems. The script configures the project-local runtime-library directory first.</p>
+<p>The MuJoCo Python wheel includes the engine library; no separate engine download or legacy <code>mujoco-py</code> installation is needed. Keep <strong>3.4.0</strong> with this DLL. See the <a href="https://mujoco.readthedocs.io/en/3.4.0/python.html#installation">official MuJoCo Python installation guide</a>.</p>
+<h2 id="step-6">6. Install and verify the MuJoCable plugin</h2>
+<h3 id="project-local-installation">Project-local installation</h3>
+<p>Extraction in section 3 already placed the required files:</p>
+<ul>
+<li><code>plugin/cable_unilateral.dll</code>: Windows x64 cable plugin.</li>
+<li><code>mujocable_plugin.py</code>: configures DLL directories and loads the plugin.</li>
+<li>The three runtime DLLs at the project root: retain their locations.</li>
+<li><code>runtime.py</code>: loads models for this project.</li>
+</ul>
+<p>There is <strong>no additional MuJoCable pip-install step</strong> in this workflow. Do not copy DLLs into Windows/System32. No administrator privileges, registry edits, or C++ compilation are required for ordinary use.</p>
+<h3 id="verify-a-small-example-then-the-elbow">Verify a small example, then the elbow</h3>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe .\open_model.py .\examples\single_pulley.xml --check
+.\.venv\Scripts\python.exe .\check_env.py
+</code></pre>
+<p>The first command should print <code>PASS</code> after advancing a one-cable example by 1000 steps. The elbow check should include:</p>
+<pre><code class="language-json">{
+  &quot;passed&quot;: true,
+  &quot;mujoco&quot;: &quot;3.4.0&quot;,
+  &quot;cables&quot;: 4,
+  &quot;actuators&quot;: 2
+}
+</code></pre>
+<p>The actual report also contains dependency versions, routing status, and the DLL hash. It is saved as <code>results/environment_check.json</code>. The elbow has two driven cables and two passive cables.</p>
+<p>Plugin registration is per process: <strong>load the DLL before compiling XML that references the plugin</strong>. <code>runtime.py</code> handles this ordering. Opening the XML in an ordinary viewer that has not loaded the DLL may produce an unknown-plugin error.</p>
+<h2 id="step-7">7. Run the elbow demo</h2>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe .\run_demo.py
+</code></pre>
+<p>After loading, a MuJoCo window opens. The controller changes the two drive cables' free lengths; structural contact participates in the simulation.</p>
+<table>
+<thead>
+<tr>
+<th>Simulation time</th>
+<th>Expected motion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–0.5 s</td>
+<td>Initial state</td>
+</tr>
+<tr>
+<td>0.5–12.5 s</td>
+<td>Large flexion</td>
+</tr>
+<tr>
+<td>12.5–14.5 s</td>
+<td>Hold near maximum flexion</td>
+</tr>
+<tr>
+<td>14.5–26.5 s</td>
+<td>Return to the initial position</td>
+</tr>
+<tr>
+<td>26.5–27.5 s</td>
+<td>Brief hold</td>
+</tr>
+<tr>
+<td>27.5–29 s</td>
+<td>Pay out the drive cables</td>
+</tr>
+<tr>
+<td>29–32 s</td>
+<td>Remain released; low-tension cables appear gray</td>
+</tr>
+</tbody>
+</table>
+<p>The nominal target is 180°, but contact limits the baseline peak to approximately <strong>178.8°</strong>. Do not force joint coordinates to reach 180°. Gray indicates tension below 0.02 N for display purposes, not deletion of a cable.</p>
+<ul>
+<li><strong>Space:</strong> pause or resume.</li>
+<li><strong>R:</strong> reset and run again.</li>
+<li><strong>Close the window:</strong> exit. At 32 simulated seconds the demo pauses without closing automatically.</li>
+<li>Simulation time need not equal wall-clock time; speed depends on the computer.</li>
+</ul>
+<p>Interactive mode is for observation. <strong>It does not generate the CSV used for verification.</strong> Use headless mode in section 8 to record data. Opening <code>model/elbow.xml</code> with the generic viewer also does not attach the dedicated elbow controller.</p>
+<p>Reference motion:</p>
+<video controls preload="metadata" poster="media/elbow-maximum.png" src="media/elbow.mp4" aria-label="Reference elbow motion"></video>
+
+<h3 id="run-with-f5-in-vs-code">Run with F5 in VS Code</h3>
+<p>The project includes <code>.vscode/launch.json</code>. Once <code>.venv</code> and dependencies exist, open <strong>Run and Debug</strong>, choose <strong>Elbow demo</strong>, and press F5.</p>
+<p>Other configurations are <strong>Environment check</strong>, <strong>Elbow headless</strong>, <strong>Verify results</strong>, and <strong>Single pulley</strong>. They explicitly use the project environment. Code Runner is unnecessary and may select a different interpreter.</p>
+<h2 id="step-8">8. Record a full run and verify results</h2>
+<p>Close the interactive viewer, then run:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe .\run_demo.py --headless
+.\.venv\Scripts\python.exe .\verify_results.py
+</code></pre>
+<p><strong>Wait for the first command to finish successfully before running the second.</strong> The simulation prints progress roughly every two simulated seconds and writes results after the 32-second run. Verification compares them with the supplied reference.</p>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>results/motion.csv</code></td>
+<td>Angles, cable commands, tensions, and contact data sampled about every 0.02 s</td>
+</tr>
+<tr>
+<td><code>results/summary.json</code></td>
+<td>Peak flexion, return angle, released tension, warnings, and other summaries</td>
+</tr>
+<tr>
+<td><code>results/environment.json</code></td>
+<td>Interpreter/dependency versions and model/DLL hashes</td>
+</tr>
+<tr>
+<td><code>results/verification.json</code></td>
+<td>Individual checks and overall <code>passed</code> status</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Baseline / acceptance condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Peak flexion</td>
+<td>Baseline about 178.8146°; within 1° of reference</td>
+</tr>
+<tr>
+<td>Return angle</td>
+<td>Baseline about −0.0165°; absolute value below 1°</td>
+</tr>
+<tr>
+<td>Released drive-cable tension</td>
+<td>Baseline 0 N; maximum below 0.02 N</td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>32 s within floating-point integration tolerance</td>
+</tr>
+<tr>
+<td>Angle-trajectory RMSE</td>
+<td>Below 2° relative to reference</td>
+</tr>
+<tr>
+<td>Dynamics warnings</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Maximum contact-proxy penetration</td>
+<td>Below 0.05 mm</td>
+</tr>
+<tr>
+<td>Route status</td>
+<td>Below 2; status 1 is accepted for this baseline</td>
+</tr>
+</tbody>
+</table>
+<p>A successful report contains <code>"passed": true</code> and nine individual checks. Small floating-point differences across platforms are expected; identical CSV bytes are not required. Preserve failed results for diagnosis rather than immediately relaxing thresholds.</p>
+<p>New runs overwrite files with the same names in <code>results</code>. Before another experiment, copy the results into a separate directory, such as <code>experiments/baseline/results</code>, together with the corresponding model, controller, and environment record.</p>
+<h2 id="step-9">9. Export video, GIF, and snapshots</h2>
+<p>Complete section 8 first. Ensure <code>results/motion.csv</code> is the run you want to visualize. In PowerShell:</p>
+<pre><code class="language-powershell">$env:ELBOW_FONT = &quot;$env:WINDIR\Fonts\times.ttf&quot;
+$env:ELBOW_FONT_BOLD = &quot;$env:WINDIR\Fonts\timesbd.ttf&quot;
+Test-Path $env:ELBOW_FONT
+Test-Path $env:ELBOW_FONT_BOLD
+</code></pre>
+<p>If both checks return <code>True</code>, run:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe .\render_video.py
+</code></pre>
+<p>If the regular face exists but the bold face does not, set the bold path to the regular face before export:</p>
+<pre><code class="language-powershell">$env:ELBOW_FONT_BOLD = $env:ELBOW_FONT
+</code></pre>
+<p>If Times New Roman is unavailable, install a legitimately obtained copy or point these variables to your existing font files. Fonts are not redistributed in the archive.</p>
+<p>Outputs are <code>results/elbow_flexion.mp4</code>, <code>elbow_flexion.gif</code>, <code>maximum.png</code>, <code>return.png</code>, and <code>release.png</code>. The model occupies the left side; English Times New Roman labels on the right report time, flexion, four cable tensions, and the friction coefficient. FFmpeg comes with the Python dependency package.</p>
+<p>Video export visualizes the recorded states; it is not a new dynamics experiment. After changing the model, rerun section 8 before exporting to avoid combining a changed model with old data.</p>
+<h2 id="step-10">10. Understand the data and editing points</h2>
+<h3 id="useful-csv-fields">Useful CSV fields</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning / units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>time_s</code>, <code>stage</code></td>
+<td>Simulation time (s) and motion stage</td>
+</tr>
+<tr>
+<td><code>flexion_deg</code></td>
+<td>Positive flexion angle for plotting (degrees)</td>
+</tr>
+<tr>
+<td><code>upper_deg</code>, <code>lower_deg</code></td>
+<td>Internal joint coordinates with the model's sign convention</td>
+</tr>
+<tr>
+<td><code>02_ctrl_mm</code>, <code>03_ctrl_mm</code></td>
+<td>Commands for the driven cables, recorded in mm</td>
+</tr>
+<tr>
+<td><code>02_tension_N</code>, <code>03_tension_N</code></td>
+<td>Driven-cable tensions (N)</td>
+</tr>
+<tr>
+<td><code>fixed_right_tension_N</code>, <code>fixed_left_tension_N</code></td>
+<td>Passive-cable tensions (N)</td>
+</tr>
+<tr>
+<td><code>*_length_mm</code>, <code>*_free_length_mm</code></td>
+<td>Routed and free cable lengths (mm)</td>
+</tr>
+<tr>
+<td><code>contact_count</code>, <code>contact_normal_force_N</code></td>
+<td>Contact count and normal-force statistics for the selected structural proxies</td>
+</tr>
+<tr>
+<td><code>max_penetration_mm</code></td>
+<td>Maximum structural-proxy penetration at that sample (mm)</td>
+</tr>
+<tr>
+<td><code>cable_friction_mu</code></td>
+<td>Recorded cable friction coefficient; zero in this baseline</td>
+</tr>
+</tbody>
+</table>
+<p>Internal lengths generally use meters, while the indicated CSV fields use millimeters. Positive flexion is the negative sum of the internal angles. Prefer <code>flexion_deg</code> for plots; <code>angle_deg</code> uses the opposite sign convention.</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>File to inspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Motion timing and control</td>
+<td><code>schedule()</code> and <code>Controller</code> in <code>run_demo.py</code></td>
+</tr>
+<tr>
+<td>Pulleys, guides, routing, and collision proxies</td>
+<td><code>model/elbow.xml</code></td>
+</tr>
+<tr>
+<td>A minimal cable MJCF example</td>
+<td><code>examples/single_pulley.xml</code></td>
+</tr>
+<tr>
+<td>Model and DLL loading</td>
+<td><code>runtime.py</code>, <code>mujocable_plugin.py</code></td>
+</tr>
+<tr>
+<td>Camera and video layout</td>
+<td><code>render_video.py</code></td>
+</tr>
+<tr>
+<td>Baseline acceptance checks</td>
+<td><code>verify_results.py</code></td>
+</tr>
+<tr>
+<td>Cylinder-routing modifications</td>
+<td><code>patches</code> and <code>source</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Changing geometry can invalidate the existing controller lookup table.</strong> The controller reads an angle–length scan from <code>model/mobility_route_scan.json</code>. Changes to pulley position, radius, or cable routing require a new scan and controller calibration. This package does not include a one-click script to regenerate that scan. Reproduce the baseline first; a failure after geometry edits is not automatically a plugin fault.</p>
+<p>The recording code also writes <code>cable_friction_mu</code> as zero. If you later change physical friction, update parameter logging as well; changing only the figure label or one model setting is insufficient.</p>
+<h2 id="step-11">11. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check / action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>py</code> is not recognized</td>
+<td>Reopen the terminal; check the standard Python installation and launcher, or use the interpreter's full path</td>
+</tr>
+<tr>
+<td><code>.venv\Scripts\python.exe</code> is missing</td>
+<td>Confirm the project root and successful environment creation</td>
+</tr>
+<tr>
+<td>PowerShell blocks <code>Activate.ps1</code></td>
+<td>Skip activation and use the explicit interpreter paths in this guide</td>
+</tr>
+<tr>
+<td><code>No module named mujoco</code></td>
+<td>Install with the same <code>.venv</code> interpreter used to run the program; check VS Code's selection</td>
+</tr>
+<tr>
+<td>pip download failure</td>
+<td>Check network, proxy, and package index; retry without disabling TLS verification</td>
+</tr>
+<tr>
+<td><code>No matching distribution</code></td>
+<td>Check Python 3.12 x64 and availability of the pinned wheels on your package index</td>
+</tr>
+<tr>
+<td>DLL load failure / WinError 126</td>
+<td>Check the three project-local runtime DLLs and plugin; use the supplied diagnostic scripts. If needed, install or repair the x64 runtime through <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170">Microsoft's official page</a>, not an arbitrary DLL download site</td>
+</tr>
+<tr>
+<td>Unknown <code>mujoco.cable.unilateral</code> plugin</td>
+<td>Load the plugin before compiling XML; use the supplied loaders</td>
+</tr>
+<tr>
+<td>WinError 193</td>
+<td>Check binary architecture: x64 Python and Windows DLL; macOS <code>.dylib</code> and Linux <code>.so</code> files are incompatible</td>
+</tr>
+<tr>
+<td>Mesh file not found</td>
+<td>Preserve <code>model/assets</code>; do not copy only the XML</td>
+</tr>
+<tr>
+<td>Headless run works, viewer fails</td>
+<td>Check vendor graphics drivers and desktop OpenGL support; remote desktops and VMs may differ</td>
+</tr>
+<tr>
+<td>Font missing during export</td>
+<td>Set font paths as in section 9 and confirm with <code>Test-Path</code></td>
+</tr>
+<tr>
+<td>Video shows an old experiment</td>
+<td>Regenerate the CSV and check its modification time</td>
+</tr>
+<tr>
+<td>Model opens but does not follow the motion</td>
+<td>Use <code>run_demo.py</code>; the generic viewer does not supply this controller</td>
+</tr>
+<tr>
+<td>Peak is not exactly 180°</td>
+<td>The contact-limited baseline peaks near 178.8°</td>
+</tr>
+<tr>
+<td>F5 cannot find the interpreter</td>
+<td>Open the correct project root and create <code>.venv</code></td>
+</tr>
+</tbody>
+</table>
+<p>Run <code>check_mujoco.py</code>, then the single-pulley check, then <code>check_env.py</code> to isolate engine, plugin, and elbow-model problems. When reporting a problem, include terminal output and <code>results/environment_check.json</code>. For verification failures, also include the summary, verification report, and motion CSV.</p>
+<h2 id="step-12">12. Add the plugin to an existing project</h2>
+<p>This is an alternative for users who already have a MuJoCo environment. It is not an extra step in the main workflow.</p>
+<ol>
+<li>Download and fully extract the <a href="https://github.com/MuJoCable/mujocable.github.io/releases/download/windows-tutorial-v1/MuJoCable_plugin_Windows_x64.zip">plugin-only archive</a>.</li>
+<li>Use your project's 64-bit Python to install its <code>requirements.txt</code>, retaining MuJoCo 3.4.0.</li>
+<li>Run <code>example.py</code> from the plugin-package directory to check the single pulley.</li>
+<li>Retain the complete plugin-package layout and make its module directory importable in your project. Assuming <code>mujocable_plugin.py</code> is on the Python module search path:</li>
+</ol>
+<pre><code class="language-python">from mujocable_plugin import load_plugin
+load_plugin()  # Before compiling XML that references this plugin
+import mujoco
+
+m = mujoco.MjModel.from_xml_path(&quot;your_model.xml&quot;)
+d = mujoco.MjData(m)
+</code></pre>
+<p>Your MJCF must still define plugin instances, endpoints/guides, wrapping geometry, and actuators. Installing a DLL does not automatically route cables. Control units depend on configuration: the single-pulley example uses <code>target_contraction</code>, where positive commands shorten the free cable length in meters.</p>
+<h2 id="step-13">13. Quick start with the portable package</h2>
+<p>Download and extract <a href="https://github.com/MuJoCable/mujocable.github.io/releases/download/windows-tutorial-v1/MuJoCable_Windows_x64.zip">MuJoCable_Windows_x64.zip</a>, then:</p>
+<ol>
+<li>Double-click <code>CHECK_ENV.cmd</code> and check for <code>passed: true</code>.</li>
+<li>Double-click <code>START_ELBOW.cmd</code> to see the motion.</li>
+<li>Use <code>RUN_HEADLESS.cmd</code> to record and verify data.</li>
+<li>Use <code>EXPORT_VIDEO.cmd</code> to export video.</li>
+</ol>
+<p>This option needs neither VS Code nor a separately installed Python. Its launchers use the bundled <code>python/python.exe</code>; the main tutorial uses <code>.venv</code>. Running the portable demo does not validate your separately created environment.</p>
+<p>You may inspect the portable scripts in VS Code, but its embedded Python is not the starting point for this guide's venv and pip workflow. Use the development project for ongoing model edits and experiments.</p>
+<h2 id="step-14">14. Reproduction checklist</h2>
+<ul>
+<li>Base MuJoCo reports version 3.4.0 and passes its dynamics check.</li>
+<li>The elbow environment check reports four cable plugins, two actuators, and <code>passed: true</code>.</li>
+<li>The viewer completes flexion, return, and release with low-tension cables turning gray.</li>
+<li>Save <code>motion.csv</code>, <code>summary.json</code>, <code>environment.json</code>, and <code>verification.json</code>; the unchanged baseline passes verification.</li>
+<li>Export an MP4 and peak-flexion snapshot; retain the experiment date and version.</li>
+<li>Record any model or script edits. Preserve the unchanged baseline before parameter studies.</li>
+</ul>
+<h2 id="step-15">15. Validation status and model scope</h2>
+<p>The Windows x64 DLL and Windows Python/MuJoCo binaries have been tested under <strong>Wine 11.0 on macOS</strong>, including a 32-second rollout, the single-pulley example, viewer, and video export. Peak baseline flexion was approximately 178.8146°. Evidence is included in <code>validation</code>.</p>
+<p>The development project also passed base-engine, single-pulley, elbow-loading, and full-rollout verification checks with an independent Windows interpreter and project-local DLL loading. See <code>project_guide_checks.json</code> and <code>project_rollout_verification.json</code> in <code>validation</code>.</p>
+<p><strong>Native Windows 10/11 installation and GUI acceptance testing remains outstanding.</strong> The standard Python installer, venv creation, pip network installation, and VS Code GUI steps are documented from official sources rather than tested on a native Windows machine. Wine does not establish compatibility with every Windows graphics driver or system policy. The Wine video test logged an OpenGL 0x506 context warning but completed export; a snapshot was inspected.</p>
+<p>This demo uses zero gravity and zero cable friction, and accepts route status 1 under the existing model thresholds. Low tension after release does not independently establish mechanical self-locking under load. The demo is also not a maximum-load-versus-angle experiment: that requires explicitly specified gravity, external loads, actuator limits, and acceptance conditions.</p>
+<p>Official documentation is linked alongside the relevant steps. Package versions, binary hashes, and patch provenance are recorded in <code>BUILD_MANIFEST.json</code> and the included build-provenance files.</p><footer>Windows x64 · MuJoCo 3.4.0 · MuJoCable v0.2.0 + elbow routing patch</footer></main></div></body></html>
