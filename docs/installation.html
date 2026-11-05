@@ -7,14 +7,14 @@
         <link rel="canonical" href="https://mujocable.github.io/docs/installation.html">
 
     <link rel="shortcut icon" href="_static/favicon.jpg"><!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
-        <title>安装与版本 - MuJoCable Documentation</title>
+        <title>安装与运行 - MuJoCable Documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/katex/katex.min.css?v=83223527" />
     <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=05624691" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=fab3b91c" />
+    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=a4aaad0f" />
     
     
 
@@ -196,7 +196,13 @@
   
   <span class="sidebar-brand-text">MuJoCable Documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+</a>
+<nav class="language-switch" aria-label="Documentation language">
+  
+  <a href="#" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a>
+  <a href="en/installation.html" lang="en" hreflang="en">English</a>
+  
+</nav><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
@@ -204,7 +210,7 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
 <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">安装与版本</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">安装与运行</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">第一个绳驱模型</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modeling.html">MJCF 建模结构</a></li>
 <li class="toctree-l1"><a class="reference internal" href="actuation.html">如何驱动与收放绳</a></li>
@@ -242,13 +248,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">验证与复现</a></li>
 <li class="toctree-l1"><a class="reference internal" href="downloads.html">下载与教程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="english.html">English Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="english.html">English Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">文档版本</a></li>
 </ul>
 
-</div>
-</div>
-
+</div></div>
       </div>
       
     </div>
@@ -279,85 +283,103 @@
         </div>
         <article role="main" id="furo-main-content">
           <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>安装与版本<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h1>
+<h1>安装与运行<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h1>
+<p>本页适用于 macOS 和 Linux，使用 Python 3.12、MuJoCo 3.4.0、Git 和 C++17 编译器。Windows 请按<a class="reference external" href="https://mujocable.github.io/tutorials/windows/zh.html">中文安装教程</a>操作。</p>
 <section id="id2">
-<h2>推荐：从公开源码构建<a class="headerlink" href="#id2" title="链接到此标题。">¶</a></h2>
-<p>所有命令在仓库根目录运行。新建 Python 环境，避免把已有旧动态库误当作最新版。</p>
+<h2>1. 下载仓库<a class="headerlink" href="#id2" title="链接到此标题。">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/MuJoCable/mujoco-cable-dynamics.git
 <span class="nb">cd</span><span class="w"> </span>mujoco-cable-dynamics
-python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+</pre></div>
+</div>
+<p>后续命令均在该目录执行。</p>
+</section>
+<section id="id3">
+<h2>2. 创建环境并安装依赖<a class="headerlink" href="#id3" title="链接到此标题。">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"mujoco==3.4.0"</span><span class="w"> </span>numpy<span class="w"> </span>cmake<span class="w"> </span>pillow<span class="w"> </span>matplotlib
-
-<span class="nv">MUJOCO_DIR</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">'from pathlib import Path; import mujoco; print(Path(mujoco.__file__).resolve().parent)'</span><span class="k">)</span><span class="s2">"</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2>3. 编译插件<a class="headerlink" href="#id4" title="链接到此标题。">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">MUJOCO_DIR</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">'from pathlib import Path; import mujoco; print(Path(mujoco.__file__).resolve().parent)'</span><span class="k">)</span><span class="s2">"</span>
 cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-DMUJOCO_PYTHON_PACKAGE_DIR<span class="o">=</span><span class="s2">"</span><span class="nv">$MUJOCO_DIR</span><span class="s2">"</span>
 cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>--config<span class="w"> </span>Release
 </pre></div>
 </div>
-<p>这个流程直接构建 C++ 动态库，不依赖仓库的 editable Python 打包。当前公开提交的 <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code> 可能因 setuptools 的顶层目录发现而失败；不要把这个打包问题误判成插件编译失败。需要运行 Python 辅助模块的测试时使用：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHONPATH</span><span class="o">=</span>python<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w"> </span>discover<span class="w"> </span>tests
-</pre></div>
-</div>
-<p>如果动态库不在默认 <code class="docutils literal notranslate"><span class="pre">build/plugin/</span></code>，先设置 <code class="docutils literal notranslate"><span class="pre">CABLE_PLUGIN_LIBRARY</span></code> 指向该库。测试必须真正找到库；跳过测试不代表验证通过。</p>
-<p>需要 C++17 编译器和 CMake。macOS 可使用已安装的 Xcode Command Line Tools；Linux 可使用系统 C++ 编译工具链。不要把不同 MuJoCo 版本、CPU 架构或操作系统编译的动态库混用。</p>
+<p>编译产物：</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>平台</p></th>
-<th class="head"><p>典型动态库</p></th>
-<th class="head"><p>GUI 入口</p></th>
+<th class="head"><p>插件文件</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>macOS</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">build/plugin/libcable_unilateral.dylib</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mjpython</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Linux</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">build/plugin/libcable_unilateral.so</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">python</span></code></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>本手册的构建与案例验证基线是 <strong>MuJoCo 3.4.0</strong>。这不是对所有未来 MuJoCo 版本、Windows 或 GPU 后端的兼容承诺。</p>
-<p>Windows 用户可使用独立的<a class="reference external" href="https://mujocable.github.io/tutorials/windows/zh.html">Windows 安装与肘关节教程</a>（<a class="reference external" href="https://mujocable.github.io/tutorials/windows/">English</a>），按该发行包的版本和架构说明操作；不要直接复制本页 macOS 的 <code class="docutils literal notranslate"><span class="pre">.dylib</span></code> 命令。</p>
 </section>
-<section id="id3">
-<h2>检查是否加载成功<a class="headerlink" href="#id3" title="链接到此标题。">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/smoke_cpp_plugin.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--plugin<span class="w"> </span>build/plugin/libcable_unilateral.dylib<span class="w"> </span><span class="se">\</span>
+<section id="id5">
+<h2>4. 检查插件<a class="headerlink" href="#id5" title="链接到此标题。">¶</a></h2>
+<p>设置插件位置，运行 50 步无界面测试：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">CABLE_PLUGIN_LIBRARY</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">'from pathlib import Path; import sys; print(Path("build/plugin/libcable_unilateral" + (".dylib" if sys.platform == "darwin" else ".so")).resolve())'</span><span class="k">)</span><span class="s2">"</span>
+python<span class="w"> </span>scripts/smoke_cpp_plugin.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--plugin<span class="w"> </span><span class="s2">"</span><span class="nv">$CABLE_PLUGIN_LIBRARY</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--model<span class="w"> </span>cable_plugin_demos/15_cpp_plugin_surface_single_pulley.xml<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--steps<span class="w"> </span><span class="m">50</span>
 </pre></div>
 </div>
-<p>Linux 把 <code class="docutils literal notranslate"><span class="pre">.dylib</span></code> 改为 <code class="docutils literal notranslate"><span class="pre">.so</span></code>。先完成这个无界面检查，再排查 OpenGL/viewer 问题。</p>
 </section>
-<section id="id4">
-<h2>打开已有模型<a class="headerlink" href="#id4" title="链接到此标题。">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 启动器按平台选择 mjpython 或 Python。</span>
-./scripts/run_demo.sh<span class="w"> </span><span class="m">15</span><span class="w"> </span>--show-cable-state<span class="w"> </span>--duration<span class="w"> </span><span class="m">120</span>
-
-<span class="c1"># 手工控制，关闭自动输入。</span>
-./scripts/run_demo.sh<span class="w"> </span><span class="m">15</span><span class="w"> </span>--no-auto-control<span class="w"> </span>--show-cable-state<span class="w"> </span>--duration<span class="w"> </span><span class="m">120</span>
-
-<span class="c1"># 论文案例入口。</span>
-python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>list
-python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>view<span class="w"> </span>rolling_mesh<span class="w"> </span>--show-cable-state
+<section id="viewer">
+<h2>5. 打开 viewer 并手动收绳<a class="headerlink" href="#viewer" title="链接到此标题。">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./scripts/run_demo.sh<span class="w"> </span><span class="m">15</span><span class="w"> </span>--no-auto-control<span class="w"> </span>--show-cable-state<span class="w"> </span>--duration<span class="w"> </span><span class="m">120</span>
 </pre></div>
 </div>
-<p>此通用 viewer 的 <code class="docutils literal notranslate"><span class="pre">--duration</span></code> 是仿真循环重置时长，不是保证按墙钟时间退出。慢模型推进 1 秒仿真时间可能需要更长现实时间。</p>
+<p>展开右侧 <strong>Control</strong>，调整 <code class="docutils literal notranslate"><span class="pre">cable_contraction</span></code>。输入 <code class="docutils literal notranslate"><span class="pre">0.010</span></code> 表示收绳 10 mm。关闭窗口后返回终端。</p>
 </section>
-<section id="release">
-<h2>二进制 Release<a class="headerlink" href="#release" title="链接到此标题。">¶</a></h2>
-<p>可在 <a class="reference external" href="https://github.com/MuJoCable/mujoco-cable-dynamics/releases">Releases</a> 查看已发布的平台包。<strong>源码更新、已合并 PR 与已发布二进制不是同一件事。</strong> 为使用本手册描述的最新接口，优先从当前源码构建；不要假定旧 Release 已包含全部更新。</p>
-<p>下载的 XML 通常还需要相对路径下的 mesh/纹理。使用案例页的“模型与资产 ZIP”，或 clone 完整仓库；只下载单个 XML 不一定能加载。</p>
+<section id="id6">
+<h2>6. 运行自动演示<a class="headerlink" href="#id6" title="链接到此标题。">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./scripts/run_demo.sh<span class="w"> </span><span class="m">15</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--auto-actuator<span class="w"> </span>cable_contraction<span class="w"> </span>--ctrl-final<span class="w"> </span><span class="m">0</span>.030<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--show-cable-state<span class="w"> </span>--duration<span class="w"> </span><span class="m">120</span>
+</pre></div>
+</div>
+<p>自动演示期间由脚本更新控制量；需要自己拖动滑块时，使用第 5 步命令。</p>
 </section>
-<section id="id5">
-<h2>更新动态库后<a class="headerlink" href="#id5" title="链接到此标题。">¶</a></h2>
-<p>退出旧 viewer，重新编译并新开进程。XML reload 不保证替换已由进程加载的动态库。当前每实例状态为 8 个标量；旧版 5 状态的 checkpoint 或 MJB 不应直接复用。保留 MJCF 作为可迁移源文件。</p>
+<section id="id7">
+<h2>7. 打开其他案例<a class="headerlink" href="#id7" title="链接到此标题。">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>list
+python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>view<span class="w"> </span>rolling_mesh<span class="w"> </span>--show-cable-state
+python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>view<span class="w"> </span>finger<span class="w"> </span>--show-cable-state
+python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>view<span class="w"> </span>spirobs<span class="w"> </span>--show-cable-state
+</pre></div>
+</div>
+<p>这些命令默认手动控制。截图、视频、参数和完整模型包见<a class="reference internal" href="gallery.html"><span class="std std-doc">案例库</span></a>。自己的第一个模型见<a class="reference internal" href="quickstart.html"><span class="std std-doc">快速入门</span></a>。</p>
+</section>
+<section id="id8">
+<h2>8. 运行测试（可选）<a class="headerlink" href="#id8" title="链接到此标题。">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHONPATH</span><span class="o">=</span>python<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>unittest<span class="w"> </span>discover<span class="w"> </span>tests
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h2>下次打开与更新<a class="headerlink" href="#id9" title="链接到此标题。">¶</a></h2>
+<p>重新打开终端后，进入仓库目录并运行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+./scripts/run_demo.sh<span class="w"> </span><span class="m">15</span><span class="w"> </span>--no-auto-control<span class="w"> </span>--show-cable-state
+</pre></div>
+</div>
+<p>更新代码后，关闭原 viewer，重新执行第 3 步编译，再打开模型。预编译包见 <a class="reference external" href="https://github.com/MuJoCable/mujoco-cable-dynamics/releases">Releases</a>。</p>
 </section>
 </section>
 
@@ -416,12 +438,16 @@ python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>view<
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">安装与版本</a><ul>
-<li><a class="reference internal" href="#id2">推荐：从公开源码构建</a></li>
-<li><a class="reference internal" href="#id3">检查是否加载成功</a></li>
-<li><a class="reference internal" href="#id4">打开已有模型</a></li>
-<li><a class="reference internal" href="#release">二进制 Release</a></li>
-<li><a class="reference internal" href="#id5">更新动态库后</a></li>
+<li><a class="reference internal" href="#">安装与运行</a><ul>
+<li><a class="reference internal" href="#id2">1. 下载仓库</a></li>
+<li><a class="reference internal" href="#id3">2. 创建环境并安装依赖</a></li>
+<li><a class="reference internal" href="#id4">3. 编译插件</a></li>
+<li><a class="reference internal" href="#id5">4. 检查插件</a></li>
+<li><a class="reference internal" href="#viewer">5. 打开 viewer 并手动收绳</a></li>
+<li><a class="reference internal" href="#id6">6. 运行自动演示</a></li>
+<li><a class="reference internal" href="#id7">7. 打开其他案例</a></li>
+<li><a class="reference internal" href="#id8">8. 运行测试（可选）</a></li>
+<li><a class="reference internal" href="#id9">下次打开与更新</a></li>
 </ul>
 </li>
 </ul>

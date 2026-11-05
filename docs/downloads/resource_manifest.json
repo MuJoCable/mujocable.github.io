@@ -3,84 +3,84 @@
     "id": "fixed",
     "model": "examples/paper/result_1_1/models/result_1_1_mu_0p15.xml",
     "assets": 2,
-    "model_zip_sha256": "5fa57ab95e6234a0269f1634a3e2ae4ee4cad9c8cb2ee4d565418f1b3933103b"
+    "model_zip_sha256": "673789cd2d43f959c11bad4f856d7bdf002673fa9e6d0620e1191913185615a7"
   },
   {
     "id": "free_sheave",
     "model": "examples/paper/result_1_1_b/models/result_1_1_b.xml",
     "assets": 2,
-    "model_zip_sha256": "97072669645129466841852dbea6333ead850d66c2921d35686196b6fdd47999"
+    "model_zip_sha256": "e9bdf6f183cc94d20c1ac83dead2b2a87fec5c43ceb768981a799c8031df59b4"
   },
   {
     "id": "winch",
     "model": "examples/paper/result_1_1_c/models/result_1_1_c.xml",
     "assets": 1,
-    "model_zip_sha256": "d82e025cbfcab8ae0dacf78a9f937eb82bf581b3054564566e61f89ae5250a07"
+    "model_zip_sha256": "4eca35274b8cb84e9656216f573355e7647aabab4d097e0baec0b2ae887bd5e7"
   },
   {
     "id": "moving",
     "model": "examples/paper/result_1_2/models/result_1_2.xml",
     "assets": 1,
-    "model_zip_sha256": "4760abb879d138230f68e614bb8fd1fa1ffa1bf53dbfbf005c88607be7104b56"
+    "model_zip_sha256": "0b2cbe5d286b822c9ae23063f18d7faf4e958269a06b6c8626a71509efee37a3"
   },
   {
     "id": "atwood",
     "model": "examples/paper/result_1_3/models/result_1_3.xml",
     "assets": 1,
-    "model_zip_sha256": "c494970664f0fd72aa8a257f291ca338765a99397ee5c41bc28ff87b666e5b64"
+    "model_zip_sha256": "e81e2e9f60f53325fc295e0d6cfc9aa247be442abc1976d6a2532c7bf6d5a743"
   },
   {
     "id": "rolling",
     "model": "examples/paper/result_2_1/models/result_2_1b_mujocable_surface.xml",
     "assets": 9,
-    "model_zip_sha256": "9cb4cc4622ede091cd12d1ca7413943382542e5918aff7a30a5ea1d05b5437f0"
+    "model_zip_sha256": "8327f1c78f616fcbf809298644fbc50c474cfe59774bf1d07558255f0abe357c"
   },
   {
     "id": "spirobs",
     "model": "examples/paper/result_2_2/models/result_2_2a_mujocable_mu_0p15.xml",
     "assets": 22,
-    "model_zip_sha256": "fa41fbb4aac303c8a61623730d3158363d2adc0b44d603c76a8fe7d6c34fbe91"
+    "model_zip_sha256": "fa545c12483c4946a50158fbd5d668500dad8e1b11f280afed3ce4e1bc0fc49a"
   },
   {
     "id": "friction",
     "model": "examples/paper/result_2_3/models/result_2_3_mu_0p60.xml",
     "assets": 25,
-    "model_zip_sha256": "5c6ebb7cb17495b68d9ef8ad8a4aa2f0aeb3953f937626ec0af87c22fe088543"
+    "model_zip_sha256": "566bf1ab771ae3d19e8e8b8d21d809361b51d718e52b39552967dd2887a55f24"
   },
   {
     "id": "finger",
     "model": "examples/paper/result_2_2/demo42_single_finger/models/result_2_2c_demo42_single_finger.xml",
     "assets": 5,
-    "model_zip_sha256": "3535de102c0d6a7e74e1561ca307322bd6e3046bbedc89a13c103fb302f6099f"
+    "model_zip_sha256": "19f0fbc8831d13c8899ec260efd24e51dc9dcd1218af5660c082e617371c6605"
   },
   {
     "id": "calibrated",
     "model": "examples/paper/result_3_2/models/result_3_2.xml",
     "assets": 20,
-    "model_zip_sha256": "7cb79b8315bdfd7fffb04ad7b022ea1219002465b68f2f8498f0a78e405f72e0"
+    "model_zip_sha256": "c1372b01d07bc307a82e0c244be66edc998dccf3516f5d8a41ed6c9e787ef2f8"
   },
   {
     "id": "ellipse",
     "model": "examples/showcase/models/irregular_pulley_ellipse.xml",
     "assets": 2,
-    "model_zip_sha256": "03d93cc98025910f37f5345cdb95f129f5f3587d54df113f5c2dd69cebd11bf1"
+    "model_zip_sha256": "1cac53296c5c2084622881828fa6d5e0b09b1621910f710996794dd2c01a7e9d"
   },
   {
     "id": "cam",
     "model": "examples/showcase/models/irregular_pulley_cam.xml",
     "assets": 2,
-    "model_zip_sha256": "62acaafff23993227b0dd90525ea988642693fa13558f8fe716dcfa2155112bb"
+    "model_zip_sha256": "4e7cc05c9b470b8f131a94778a9da2cab7d2e3b64bdbb7c221b4597defc476e6"
   },
   {
     "id": "box",
     "model": "examples/showcase/models/irregular_pulley_box.xml",
     "assets": 2,
-    "model_zip_sha256": "191fcb2db11c35ba4850079ef992a5cf204a032a61a508c8eabb09eedcae7f50"
+    "model_zip_sha256": "50dc0150153b274a48fee466471edc3730fe63bfe5800ea3ddc3f9823e9d73be"
   },
   {
     "id": "icra",
     "model": "examples/showcase/models/icra_surface_cables.xml",
     "assets": 7,
-    "model_zip_sha256": "008cf5c745947c6c73bf37daa258a1b78b5ccdf383bca5f413c5c4ca7c93bc13"
+    "model_zip_sha256": "d4edd4df98e69b957c2edb6072f56a84717af921fb64e5af00bd0f0d076ce0b4"
   }
 ]

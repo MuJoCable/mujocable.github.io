@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="_static/katex/katex.min.css?v=83223527" />
     <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=05624691" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=fab3b91c" />
+    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=a4aaad0f" />
     
     
 
@@ -196,7 +196,13 @@
   
   <span class="sidebar-brand-text">MuJoCable Documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+</a>
+<nav class="language-switch" aria-label="Documentation language">
+  
+  <a href="#" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a>
+  <a href="en/routing.html" lang="en" hreflang="en">English</a>
+  
+</nav><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
@@ -204,7 +210,7 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">安装与版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">安装与运行</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">第一个绳驱模型</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modeling.html">MJCF 建模结构</a></li>
 <li class="toctree-l1"><a class="reference internal" href="actuation.html">如何驱动与收放绳</a></li>
@@ -242,13 +248,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">验证与复现</a></li>
 <li class="toctree-l1"><a class="reference internal" href="downloads.html">下载与教程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="english.html">English Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="english.html">English Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">文档版本</a></li>
 </ul>
 
-</div>
-</div>
-
+</div></div>
       </div>
       
     </div>
@@ -286,6 +290,30 @@
 <a class="reference internal image-reference" href="_images/site_roles.svg"><img alt="端点、初始化提示、真实导向与求解绳路的区别" src="_images/site_roles.svg" style="width: 100%;" />
 </a>
 <p>图中的配色是教学标记，不是插件保留的物理颜色：端点绿色、hint 黄色、guide 青色、普通标记品红色，运行时路线与切点另行绘制。真实项目可自行调整 <code class="docutils literal notranslate"><span class="pre">rgba</span></code>。</p>
+</section>
+<section id="cad-solidworks">
+<h2>复杂 CAD：在 SolidWorks 中选点<a class="headerlink" href="#cad-solidworks" title="链接到此标题。">¶</a></h2>
+<p>手指、多体机构等模型可以使用 <a class="reference external" href="https://github.com/MuJoCable/solidworks-reference-geometry-exporter">SOLIDWORKS Reference Geometry Exporter</a>，先在 CAD 中确定穿绳位置，再导入 MJCF：</p>
+<ol class="arabic simple">
+<li><p>在 SolidWorks 中创建并命名参考点或 3D 草图点，分别标记系绳点、孔口和绕行提示位置。</p></li>
+<li><p>在 Windows SolidWorks 中打开装配体，将组件设为 <strong>Fully Resolved</strong>。按<a class="reference external" href="https://github.com/MuJoCable/solidworks-reference-geometry-exporter#installation">工具安装步骤</a>导入 <code class="docutils literal notranslate"><span class="pre">ExportAssemblyReferenceGeometry.bas</span></code>，运行 <code class="docutils literal notranslate"><span class="pre">ExportAssemblyReferenceGeometry.main</span></code>，得到 CSV。</p></li>
+<li><p>使用工具中的 <a class="reference external" href="https://github.com/MuJoCable/solidworks-reference-geometry-exporter/blob/main/docs/MJCF_CONVERTER.md">MJCF 转换器</a>，把选中的记录绑定到对应 body，并设置 <code class="docutils literal notranslate"><span class="pre">user=1/2/3</span></code>。</p></li>
+<li><p>在 viewer 中核对至少三个已知点的位置，再连接 seed tendon。</p></li>
+</ol>
+<p>先运行转换器自带示例，命令在该工具的仓库目录执行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/MuJoCable/solidworks-reference-geometry-exporter.git
+<span class="nb">cd</span><span class="w"> </span>solidworks-reference-geometry-exporter
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+python<span class="w"> </span>tools/sw_reference_to_mjcf.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--csv<span class="w"> </span>examples/example_output.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mjcf<span class="w"> </span>examples/minimal_model.xml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mapping<span class="w"> </span>examples/mapping.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>generated/bound_model.xml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--report<span class="w"> </span>generated/binding_report.json
+</pre></div>
+</div>
+<p>随后将示例 CSV、MJCF 和 mapping 路径替换为自己的文件。输入模型包含 MuJoCable 时，追加 <code class="docutils literal notranslate"><span class="pre">--plugin</span> <span class="pre">&quot;$CABLE_PLUGIN_LIBRARY&quot;</span></code>。输出 XML 放在输入 XML 同一目录，以保持 mesh 相对路径可用。</p>
+<p>装配体 STL 使用装配坐标，单零件 STL 使用零件局部坐标；在转换器中匹配相应坐标系。CSV 同时提供 m 和 mm，MJCF 的位置使用 m。孔口未建参考点时，先在 CAD 中补点，工具不会自动推断所有孔的位置。</p>
 </section>
 <section id="id1">
 <h2>路由模式怎么选<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h2>
@@ -418,6 +446,7 @@
             <ul>
 <li><a class="reference internal" href="#">绳路、参考点与 mesh</a><ul>
 <li><a class="reference internal" href="#hint">Hint 只选择分支</a></li>
+<li><a class="reference internal" href="#cad-solidworks">复杂 CAD：在 SolidWorks 中选点</a></li>
 <li><a class="reference internal" href="#id1">路由模式怎么选</a></li>
 <li><a class="reference internal" href="#id2">连续绕过两个表面</a></li>
 <li><a class="reference internal" href="#id3">为什么它从竖直侧面走了</a></li>

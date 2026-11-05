@@ -7,14 +7,14 @@
         <link rel="canonical" href="https://mujocable.github.io/docs/english.html">
 
     <link rel="shortcut icon" href="_static/favicon.jpg"><!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
-        <title>English Quick Start - MuJoCable Documentation</title>
+        <title>English Documentation - MuJoCable Documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/katex/katex.min.css?v=83223527" />
     <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=05624691" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=fab3b91c" />
+    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=a4aaad0f" />
     
     
 
@@ -184,7 +184,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -196,7 +196,13 @@
   
   <span class="sidebar-brand-text">MuJoCable Documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+</a>
+<nav class="language-switch" aria-label="Documentation language">
+  
+  <a href="#" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a>
+  <a href="en/english.html" lang="en" hreflang="en">English</a>
+  
+</nav><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
@@ -242,13 +248,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">验证与复现</a></li>
 <li class="toctree-l1"><a class="reference internal" href="downloads.html">下载与教程</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">English Quick Start</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">English Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">文档版本</a></li>
 </ul>
 
-</div>
-</div>
-
+</div></div>
       </div>
       
     </div>
@@ -273,91 +277,16 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section class="tex2jax_ignore mathjax_ignore" id="english-quick-start">
-<h1>English Quick Start<a class="headerlink" href="#english-quick-start" title="链接到此标题。">¶</a></h1>
-<p>MuJoCable is a massless, pull-only cable-transmission plugin for MuJoCo. It computes moving surface routes, axial tension and segment friction, then maps cable forces to rigid bodies. This page is a short English entry point; the complete task-oriented manual is currently in Chinese.</p>
-<section id="install-and-build">
-<h2>Install and Build<a class="headerlink" href="#install-and-build" title="链接到此标题。">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/MuJoCable/mujoco-cable-dynamics.git
-<span class="nb">cd</span><span class="w"> </span>mujoco-cable-dynamics
-python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'mujoco==3.4.0'</span><span class="w"> </span>numpy
-cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-DMUJOCO_PYTHON_PACKAGE_DIR<span class="o">=</span><span class="s2">"</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">'import pathlib,mujoco; print(pathlib.Path(mujoco.__file__).parent)'</span><span class="k">)</span><span class="s2">"</span>
-cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>--config<span class="w"> </span>Release
-</pre></div>
-</div>
-<p>The library is <code class="docutils literal notranslate"><span class="pre">build/plugin/libcable_unilateral.dylib</span></code> on macOS and <code class="docutils literal notranslate"><span class="pre">.so</span></code> on Linux. Use a matching MuJoCo version and CPU architecture. Precompiled release availability is platform-specific.</p>
-</section>
-<section id="open-and-control">
-<h2>Open and Control<a class="headerlink" href="#open-and-control" title="链接到此标题。">¶</a></h2>
-<p>Download <a class="reference download internal" download="" href="_downloads/c922a4f546876a5baa3616c329905388/minimal_surface.xml"><span class="xref download myst">minimal_surface.xml</span></a> into the repository root:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mjpython<span class="w"> </span>scripts/view_cpp_plugin_demo.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--plugin<span class="w"> </span>build/plugin/libcable_unilateral.dylib<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>minimal_surface.xml<span class="w"> </span>--no-auto-control<span class="w"> </span>--show-cable-state
-</pre></div>
-</div>
-<p>On Linux, replace <code class="docutils literal notranslate"><span class="pre">mjpython</span></code> with <code class="docutils literal notranslate"><span class="pre">python</span></code> and <code class="docutils literal notranslate"><span class="pre">.dylib</span></code> with <code class="docutils literal notranslate"><span class="pre">.so</span></code>. In the Control panel, set <code class="docutils literal notranslate"><span class="pre">pull=0.010</span></code> for 10 mm of take-up, not 0.01 N. Remove <code class="docutils literal notranslate"><span class="pre">--no-auto-control</span></code> and add <code class="docutils literal notranslate"><span class="pre">--auto-actuator</span> <span class="pre">pull</span> <span class="pre">--ctrl-final</span> <span class="pre">0.030</span></code> for an automatic ramp.</p>
-</section>
-<section id="modeling-contract">
-<h2>Modeling Contract<a class="headerlink" href="#modeling-contract" title="链接到此标题。">¶</a></h2>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Element</p></th>
-<th class="head"><p>Meaning</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">site</span> <span class="pre">user=&quot;1&quot;</span></code></p></td>
-<td><p>Physical endpoint attached to its body</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">site</span> <span class="pre">user=&quot;2&quot;</span></code></p></td>
-<td><p>Initialization hint; not a runtime cable node or force application point</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">site</span> <span class="pre">user=&quot;3&quot;</span></code></p></td>
-<td><p>Physical guide that the runtime route must pass through</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">site</span> <span class="pre">user=&quot;0&quot;</span></code></p></td>
-<td><p>Ordinary marker; no cable role</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wrap_geoms</span></code></p></td>
-<td><p>Explicit obstacle list, one entry per role-2 hint in seed order</p></td>
-</tr>
-<tr class="row-odd"><td><p>Surface <code class="docutils literal notranslate"><span class="pre">gear=&quot;0&quot;</span></code></p></td>
-<td><p>Avoid duplicate native-tendon loading; the plugin applies body forces</p></td>
-</tr>
-<tr class="row-even"><td><p>No actuator</p></td>
-<td><p>A passive surface cable; finite stiffness is not an exact length constraint</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Keep the seed tendon visually hidden: widening it displays a site-to-site polyline, not the computed surface route. The plugin has its own <code class="docutils literal notranslate"><span class="pre">visual_width</span></code> and standard-scene drawing callback.</p>
-</section>
-<section id="physics-and-responsibility">
-<h2>Physics and Responsibility<a class="headerlink" href="#physics-and-responsibility" title="链接到此标题。">¶</a></h2>
-<p>MuJoCo handles rigid-body inertia, joints, contacts, constraints and time integration. The plugin handles the configured cable path and its force map. Cable friction does not come from <code class="docutils literal notranslate"><span class="pre">geom</span> <span class="pre">friction</span></code> automatically. <code class="docutils literal notranslate"><span class="pre">capstan_mu</span></code> controls wrap friction; <code class="docutils literal notranslate"><span class="pre">guide_friction_mu</span></code> controls ideal point-guide friction.</p>
-<p>The current route class is initialized and retained. There is no general automatic topology switching, massive rope, sag, bending stiffness, knotting, free-rope collision or exact static-stick friction. A point eyelet is not finite-radius cable/hole-wall contact. The experimental <code class="docutils literal notranslate"><span class="pre">implicit_compliant</span></code> interface needs a modified MuJoCo core; it is not supported by an unmodified 3.4.0 binary.</p>
-</section>
-<section id="examples-and-reproduction">
-<h2>Examples and Reproduction<a class="headerlink" href="#examples-and-reproduction" title="链接到此标题。">¶</a></h2>
-<p><a class="reference internal" href="gallery.html"><span class="std std-doc">Browse examples</span></a> for screenshots, playable raw/annotated videos and dependency-closed model ZIPs. Use the repository wrapper for manual control:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>examples/paper/requirements.txt
-python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>view<span class="w"> </span>rolling_mesh<span class="w"> </span>--show-cable-state
-python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>view<span class="w"> </span>spirobs<span class="w"> </span>--show-cable-state
-python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>result1<span class="w"> </span>--skip-videos
-python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>result2<span class="w"> </span>--skip-videos
-</pre></div>
-</div>
-<p>Historical videos and fresh numerical reproductions are labeled separately. See <a class="reference internal" href="validation.html"><span class="std std-doc">validation</span></a>, <a class="reference internal" href="downloads.html"><span class="std std-doc">downloads</span></a>, the <a class="reference external" href="https://github.com/MuJoCable/mujoco-cable-dynamics">repository</a> and the <a class="reference external" href="https://arxiv.org/abs/2609.09612">paper</a>.</p>
-</section>
+          <section class="tex2jax_ignore mathjax_ignore" id="english-documentation">
+<h1>English Documentation<a class="headerlink" href="#english-documentation" title="链接到此标题。">¶</a></h1>
+<p>The complete English manual now includes installation, modeling, actuation, routing, friction, sensors, physics, interfaces, validation and all 14 example pages.</p>
+<p><a href="en/index.html" lang="en">Open the full English documentation</a></p>
+<p>中文完整手册保留在当前目录。左侧 <strong>中文 / English</strong> 切换会打开当前章节的对应语言。两版共用模型、视频和数据包；XML 名称、参数键、单位与传感器索引保持一致。</p>
 </section>
 
         </article>
@@ -403,31 +332,8 @@ python<span class="w"> </span>examples/paper/run.py<span class="w"> </span>resul
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">English Quick Start</a><ul>
-<li><a class="reference internal" href="#install-and-build">Install and Build</a></li>
-<li><a class="reference internal" href="#open-and-control">Open and Control</a></li>
-<li><a class="reference internal" href="#modeling-contract">Modeling Contract</a></li>
-<li><a class="reference internal" href="#physics-and-responsibility">Physics and Responsibility</a></li>
-<li><a class="reference internal" href="#examples-and-reproduction">Examples and Reproduction</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

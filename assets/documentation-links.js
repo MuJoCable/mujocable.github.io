@@ -4,12 +4,19 @@ function addDocumentationLinks() {
   const resources = document.querySelector('.paper-links');
   if (!navigation || !resources) return false;
   for (const parent of [navigation, resources]) {
-    if (!parent.querySelector('[data-documentation]')) {
-      const link = document.createElement('a');
-      link.href = '/docs/';
-      link.textContent = 'Documentation';
-      link.dataset.documentation = '';
-      parent.append(link);
+    for (const [language, title, href] of [
+      ['en', 'Documentation', '/docs/en/'],
+      ['zh-CN', '中文文档', '/docs/'],
+    ]) {
+      if (!parent.querySelector(`[data-documentation="${language}"]`)) {
+        const link = document.createElement('a');
+        link.href = href;
+        link.textContent = title;
+        link.lang = language;
+        link.hreflang = language;
+        link.dataset.documentation = language;
+        parent.append(link);
+      }
     }
   }
   return true;

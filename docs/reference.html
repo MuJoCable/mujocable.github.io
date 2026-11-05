@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="_static/katex/katex.min.css?v=83223527" />
     <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=05624691" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=fab3b91c" />
+    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=a4aaad0f" />
     
     
 
@@ -196,7 +196,13 @@
   
   <span class="sidebar-brand-text">MuJoCable Documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+</a>
+<nav class="language-switch" aria-label="Documentation language">
+  
+  <a href="#" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a>
+  <a href="en/reference.html" lang="en" hreflang="en">English</a>
+  
+</nav><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
@@ -242,13 +248,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">验证与复现</a></li>
 <li class="toctree-l1"><a class="reference internal" href="downloads.html">下载与教程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="english.html">English Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="english.html">English Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">文档版本</a></li>
 </ul>
 
-</div>
-</div>
-
+</div></div>
       </div>
       
     </div>
@@ -481,7 +485,7 @@
 </div>
 <section id="id1">
 <h2>控制枚举<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ctrl_mode</span></code> 支持 <code class="docutils literal notranslate"><span class="pre">target_contraction</span></code>、<code class="docutils literal notranslate"><span class="pre">contraction_velocity</span></code>、<code class="docutils literal notranslate"><span class="pre">target_spool_angle</span></code>、<code class="docutils literal notranslate"><span class="pre">spool_angular_velocity</span></code>、<code class="docutils literal notranslate"><span class="pre">joint_spool_angle</span></code>。单位、符号和物理卷轴的区别见<a class="reference internal" href="actuation.html"><span class="std std-doc">如何驱动</span></a>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">ctrl_mode</span></code> 支持 <code class="docutils literal notranslate"><span class="pre">target_contraction</span></code>、<code class="docutils literal notranslate"><span class="pre">spool_velocity</span></code>、<code class="docutils literal notranslate"><span class="pre">target_spool_angle</span></code>、<code class="docutils literal notranslate"><span class="pre">spool_angular_velocity</span></code>、<code class="docutils literal notranslate"><span class="pre">joint_spool_angle</span></code>。单位、符号和物理卷轴的区别见<a class="reference internal" href="actuation.html"><span class="std std-doc">如何驱动</span></a>。</p>
 </section>
 <section id="id2">
 <h2>最小模板<a class="headerlink" href="#id2" title="链接到此标题。">¶</a></h2>

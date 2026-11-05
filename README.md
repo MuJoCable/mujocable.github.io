@@ -9,6 +9,14 @@ Project page: <https://mujocable.github.io/>
 
 Manual: <https://mujocable.github.io/docs/>
 
+- 中文完整文档: <https://mujocable.github.io/docs/>
+- Full English manual: <https://mujocable.github.io/docs/en/>
+
+Both editions have matching chapters, configuration reference and example pages.
+The language switch preserves the current page. Video, model and data resources
+are shared between editions. Installation is presented as numbered steps; the
+routing guide also covers SolidWorks reference-point export.
+
 The Sphinx/Furo manual is built from `docs/site` in the
 [plugin repository](https://github.com/MuJoCable/mujoco-cable-dynamics).
 Build it there with `python docs/site/build.py`, then copy the generated

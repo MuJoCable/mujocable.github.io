@@ -3,7 +3,7 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="索引" href="genindex.html"><link rel="search" title="搜索" href="search.html"><link rel="next" title="安装与版本" href="installation.html">
+<link rel="index" title="索引" href="genindex.html"><link rel="search" title="搜索" href="search.html"><link rel="next" title="安装与运行" href="installation.html">
         <link rel="canonical" href="https://mujocable.github.io/docs/index.html">
 
     <link rel="shortcut icon" href="_static/favicon.jpg"><!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="_static/katex/katex.min.css?v=83223527" />
     <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=05624691" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=fab3b91c" />
+    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=a4aaad0f" />
     
     
 
@@ -196,7 +196,13 @@
   
   <span class="sidebar-brand-text">MuJoCable Documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+</a>
+<nav class="language-switch" aria-label="Documentation language">
+  
+  <a href="#" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a>
+  <a href="#en/index.html" lang="en" hreflang="en">English</a>
+  
+</nav><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
@@ -204,7 +210,7 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">安装与版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">安装与运行</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">第一个绳驱模型</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modeling.html">MJCF 建模结构</a></li>
 <li class="toctree-l1"><a class="reference internal" href="actuation.html">如何驱动与收放绳</a></li>
@@ -242,13 +248,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">验证与复现</a></li>
 <li class="toctree-l1"><a class="reference internal" href="downloads.html">下载与教程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="english.html">English Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="english.html">English Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">文档版本</a></li>
 </ul>
 
-</div>
-</div>
-
+</div></div>
       </div>
       
     </div>
@@ -280,8 +284,8 @@
         <article role="main" id="furo-main-content">
           <section class="tex2jax_ignore mathjax_ignore" id="mujocable">
 <h1>MuJoCable 技术文档<a class="headerlink" href="#mujocable" title="链接到此标题。">¶</a></h1>
-<p>MuJoCable 是 MuJoCo 的无质量、单边受拉绳索传动插件。它在运动的圆柱与闭合 mesh 上计算绳路，再计算伸长、张力、摩擦传播和刚体受力。这里是可操作的建模手册，不是论文摘要。</p>
-<div class="manual-links"><a href="https://mujocable.github.io/">项目主页</a><a href="https://github.com/MuJoCable/mujoco-cable-dynamics">GitHub</a><a href="https://arxiv.org/abs/2609.09612">论文</a><a href="english.html">English Quick Start</a></div>
+<p>MuJoCable 是 MuJoCo 的无质量、单边受拉绳索传动插件。它在运动的圆柱与闭合 mesh 上计算绳路，再计算伸长、张力、摩擦传播和刚体受力。</p>
+<div class="manual-links"><a href="https://mujocable.github.io/">项目主页</a><a href="https://github.com/MuJoCable/mujoco-cable-dynamics">GitHub</a><a href="https://arxiv.org/abs/2609.09612">论文</a><a href="en/index.html" lang="en">English Documentation</a></div>
 <p class="manual-meta">文档更新：2026-11-05 · 验证环境：MuJoCo 3.4.0 / Python 3.12 · 模型资源固定到已公开提交，复跑与历史结果分开标记。</p>
 <section id="id1">
 <h2>从哪里开始<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h2>
@@ -326,12 +330,16 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">安装与版本</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#id2">推荐：从公开源码构建</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#id3">检查是否加载成功</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#id4">打开已有模型</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#release">二进制 Release</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#id5">更新动态库后</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">安装与运行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#id2">1. 下载仓库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#id3">2. 创建环境并安装依赖</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#id4">3. 编译插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#id5">4. 检查插件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#viewer">5. 打开 viewer 并手动收绳</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#id6">6. 运行自动演示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#id7">7. 打开其他案例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#id8">8. 运行测试（可选）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#id9">下次打开与更新</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">第一个绳驱模型</a><ul>
@@ -363,6 +371,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="routing.html">绳路、参考点与 mesh</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="routing.html#hint">Hint 只选择分支</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routing.html#cad-solidworks">复杂 CAD：在 SolidWorks 中选点</a></li>
 <li class="toctree-l2"><a class="reference internal" href="routing.html#id1">路由模式怎么选</a></li>
 <li class="toctree-l2"><a class="reference internal" href="routing.html#id2">连续绕过两个表面</a></li>
 <li class="toctree-l2"><a class="reference internal" href="routing.html#id3">为什么它从竖直侧面走了</a></li>
@@ -467,14 +476,7 @@
 <li class="toctree-l2"><a class="reference internal" href="downloads.html#id5">论文与引用</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="english.html">English Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="english.html#install-and-build">Install and Build</a></li>
-<li class="toctree-l2"><a class="reference internal" href="english.html#open-and-control">Open and Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="english.html#modeling-contract">Modeling Contract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="english.html#physics-and-responsibility">Physics and Responsibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="english.html#examples-and-reproduction">Examples and Reproduction</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="english.html">English Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">文档版本</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">2026.11</a></li>
 </ul>
@@ -494,7 +496,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">安装与版本</div>
+                <div class="title">安装与运行</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
