@@ -6,7 +6,6 @@ function addDocumentationLinks() {
   for (const parent of [navigation, resources]) {
     for (const [language, title, href] of [
       ['en', 'Documentation', '/docs/en/'],
-      ['zh-CN', '中文文档', '/docs/'],
     ]) {
       if (!parent.querySelector(`[data-documentation="${language}"]`)) {
         const link = document.createElement('a');

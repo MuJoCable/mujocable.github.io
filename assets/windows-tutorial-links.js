@@ -14,7 +14,6 @@ function addTutorialLinks() {
   if (!resources.querySelector('[data-windows-tutorial]')) {
     for (const [text, href, language] of [
       ['Windows tutorial', '/tutorials/windows/', 'en'],
-      ['Windows 中文教程', '/tutorials/windows/zh.html', 'zh-CN'],
     ]) {
       const link = document.createElement('a');
       link.href = href;
