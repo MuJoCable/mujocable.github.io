@@ -1,0 +1,466 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="索引" href="genindex.html"><link rel="search" title="搜索" href="search.html"><link rel="next" title="MuJoCo 接口与架构" href="architecture.html"><link rel="prev" title="调试与常见问题" href="debugging.html">
+        <link rel="canonical" href="https://mujocable.github.io/docs/computation.html">
+
+    <link rel="shortcut icon" href="_static/favicon.jpg"><!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>计算与物理模型 - MuJoCable Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/katex/katex.min.css?v=83223527" />
+    <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=05624691" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=fab3b91c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #177348;
+  --color-brand-content: #177348;
+  --font-stack: -apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','Microsoft YaHei',sans-serif;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #80cba1;
+  --color-brand-content: #80cba1;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #80cba1;
+  --color-brand-content: #80cba1;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">MuJoCable Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">MuJoCable Documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">安装与版本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">第一个绳驱模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modeling.html">MJCF 建模结构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actuation.html">如何驱动与收放绳</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routing.html">绳路、参考点与 mesh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="friction.html">表面摩擦与孔口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sensors.html">传感器与 Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">调试与常见问题</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">原理与接口</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">计算与物理模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">MuJoCo 接口与架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">XML 配置参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limitations.html">能力边界</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">案例与资源</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gallery.html">案例库</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="_generated/case_index.html">案例详情</a><input aria-label="Toggle navigation of 案例详情" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="_generated/fixed.html">固定滑轮与 Capstan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/free_sheave.html">带惯量的自由滑轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/winch.html">卷轴与半径传动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/moving.html">动滑轮与提升</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/atwood.html">Atwood 与落地松弛</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/rolling.html">Faive 非圆面滚动关节</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/spirobs.html">SpiRobs 与 native 对照</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/friction.html">五组摩擦与逐关节弯曲</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/finger.html">单指六索与差动驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/calibrated.html">双向完全弯曲与舵机表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/ellipse.html">椭圆滑轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/cam.html">非对称凸轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/box.html">圆角长方体滑轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/icra.html">ICRA 多 mesh 连续包络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">验证与复现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloads.html">下载与教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="english.html">English Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">文档版本</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>计算与物理模型<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h1>
+<section id="id2">
+<h2>一步仿真的顺序<a class="headerlink" href="#id2" title="链接到此标题。">¶</a></h2>
+<ol class="arabic simple">
+<li><p>MuJoCo 从当前 <span class="math">\(q,v\)</span> 更新刚体位姿与速度。</p></li>
+<li><p>MuJoCable 按初始化路线更新自由段、表面接触段和切点。</p></li>
+<li><p>由路径计算 L、几何长度率、有效伸长与源端拉力。</p></li>
+<li><p>沿局部转角传播分段张力。</p></li>
+<li><p>合成节点力，向所属刚体施加广义力。</p></li>
+<li><p>MuJoCo 结合接触、关节和其他输入积分；sensor 与可视化报告同一物理路径。</p></li>
+</ol>
+</section>
+<section id="id3">
+<h2>路径问题<a class="headerlink" href="#id3" title="链接到此标题。">¶</a></h2>
+<p>理想化目标是在给定路线类内最小化无穿透路径长度：</p>
+<div class="math-wrapper docutils container">
+<div class="math">
+\[\gamma^*(q)=\operatorname*{argmin}_{\gamma\in\Gamma(q,\mathcal H)} L(\gamma,q),\qquad
+L(q)=\sum_i\|x_{i+1}-x_i\|.\]</div>
+</div>
+<p><span class="math">\(\mathcal H\)</span> 来自 hint 指定的路线类。实际实现是暖启动、局部走廊与迭代优化，不是任意非凸场景的全局最优证明。圆柱侧面可在 <span class="math">\((r\theta,z)\)</span> 展开；mesh 使用三角面走廊、跨边参数与活动接触处理。近相切多表面需联合处理出口/入口和退化自由段。</p>
+</section>
+<section id="id4">
+<h2>单边本构<a class="headerlink" href="#id4" title="链接到此标题。">¶</a></h2>
+<div class="math-wrapper docutils container">
+<div class="math">
+\[L_f=L_0-c-p,\qquad e=L-L_f-s.\]</div>
+</div>
+<p>当 <span class="math">\(e\le0\)</span> 时不产生推力。对平滑宽度 a，使用</p>
+<div class="math-wrapper docutils container">
+<div class="math">
+\[\psi_a(e)=\begin{cases}0&e\le0,\\e^2/(2a)&0<e<a,\\e-a/2&e\ge a.\end{cases}\]</div>
+</div>
+<div class="math-wrapper docutils container">
+<div class="math">
+\[T=\operatorname{clip}_{[0,T_{\max}]}\left(k\psi_a(e)+d\eta_a(e)\dot L\right),
+\quad\eta_a(e)=\operatorname{clip}_{[0,1]}(e/a).\]</div>
+</div>
+<p>a=0 时使用未平滑的线性伸长与阻尼门控。<code class="docutils literal notranslate"><span class="pre">taut_hysteresis</span></code> 引入进入受拉状态的滞回门限，但仍禁止 <span class="math">\(e\le0\)</span> 时推压。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>这是当前代码的本构：阻尼项使用几何长度率 <code class="docutils literal notranslate"><span class="pre">Ldot</span></code>。当自由长度也随收绳改变时，完整伸长率一般是 <code class="docutils literal notranslate"><span class="pre">Ldot</span> <span class="pre">-</span> <span class="pre">Lf_dot</span></code>，两者不能直接等同。当前记录的收缩速率还用于速度定向摩擦，不表示阻尼项已自动改成完整材料应变率模型。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">max_tension</span></code> 约束源端本构 T。反向摩擦传播后某一段张力可能更高；不要将它当作所有分段的断裂保护或自动断绳模型。</p>
+</section>
+<section id="id5">
+<h2>节点力与虚功<a class="headerlink" href="#id5" title="链接到此标题。">¶</a></h2>
+<p>令 <span class="math">\(\hat t_i=(x_{i+1}-x_i)/\|x_{i+1}-x_i\|\)</span>，节点力为</p>
+<div class="math-wrapper docutils container">
+<div class="math">
+\[f_i=-T_{i-1}\hat t_{i-1}+T_i\hat t_i.\]</div>
+</div>
+<p>端点只保留相邻一项。无摩擦时分段等张力，平滑且充分收敛的局部路径应满足虚功关系</p>
+<div class="math-wrapper docutils container">
+<div class="math">
+\[Q_c\approx-T\frac{\partial L}{\partial q}.\]</div>
+</div>
+<p>实际应在 MuJoCo 的切空间中扰动姿态，使用中心差分并保持路线分支。比较的是每个自由度上的广义力，不是把所有 N 和 N m 直接混成一个无量纲误差。</p>
+<p>新版将同一刚体上的接触节点合成为一组力与力矩，再调用 <code class="docutils literal notranslate"><span class="pre">mj_applyFT</span></code>。这改变计算组织，不应改变物理映射；浮点累加顺序可能产生小差别。</p>
+</section>
+<section id="id6">
+<h2>长度率<a class="headerlink" href="#id6" title="链接到此标题。">¶</a></h2>
+<p>在局部最优路线与固定活动集假设下，可用包络定理避免直接差分接触点滑动参数。离散节点速度来自所属刚体。实现仍受路线残差、三角化和弧段离散影响；特别是已有圆柱离散长度率在某些整体刚体运动中存在微小一致性误差，不能把所有路径后端称为处处解析精确。</p>
+</section>
+<section id="id7">
+<h2>三种积分配置<a class="headerlink" href="#id7" title="链接到此标题。">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">integration_mode</span></code></p></th>
+<th class="head"><p>作用</p></th>
+<th class="head"><p>使用边界</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">explicit</span></code></p></td>
+<td><p>默认本构力直接加入动力学</p></td>
+<td><p>先用这个做标定和步长检查</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">local_implicit</span></code></p></td>
+<td><p>基于有效质量与上一步张力的局部修正</p></td>
+<td><p>不是接触/多绳统一隐式求解；当前拒绝 Capstan/guide 摩擦组合</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">implicit_compliant</span></code></p></td>
+<td><p>试图向宿主注册柔顺绳隐式算子</p></td>
+<td><p>需要对应的修改版 MuJoCo 内核接口；不是官方 3.4.0 的通用独立插件能力</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>局部修正使用 <span class="math">\(w=G M^{-1}G^T\)</span>、<span class="math">\(\beta=h d_{eff}+h^2k_{eff}\)</span>：</p>
+<div class="math-wrapper docutils container">
+<div class="math">
+\[T_{local}=\frac{T_{raw}+\beta w T_{prev}}{1+\beta w}.\]</div>
+</div>
+<p>它只描述当前局部实现，不是非线性接触问题的全隐式解。仅把 MuJoCo integrator 改成 <code class="docutils literal notranslate"><span class="pre">implicitfast</span></code>，不会自动把任意插件力的导数交给内核。详见<a class="reference internal" href="architecture.html"><span class="std std-doc">接口与架构</span></a>。</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="architecture.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">MuJoCo 接口与架构</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="debugging.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">调试与常见问题</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, MuJoCable contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">计算与物理模型</a><ul>
+<li><a class="reference internal" href="#id2">一步仿真的顺序</a></li>
+<li><a class="reference internal" href="#id3">路径问题</a></li>
+<li><a class="reference internal" href="#id4">单边本构</a></li>
+<li><a class="reference internal" href="#id5">节点力与虚功</a></li>
+<li><a class="reference internal" href="#id6">长度率</a></li>
+<li><a class="reference internal" href="#id7">三种积分配置</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=404c0906"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=7654a337"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+    <script src="_static/katex.min.js?v=5cc8ed51"></script>
+    <script src="_static/auto-render.min.js?v=af98beb9"></script>
+    <script src="_static/katex_autorenderer.js?v=bebc588a"></script>
+    <script src="_static/manual.js?v=226918b0"></script>
+    </body>
+</html>

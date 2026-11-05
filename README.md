@@ -5,6 +5,21 @@ Plugin for MuJoCo.
 
 Project page: <https://mujocable.github.io/>
 
+## Technical documentation
+
+Manual: <https://mujocable.github.io/docs/>
+
+The Sphinx/Furo manual is built from `docs/site` in the
+[plugin repository](https://github.com/MuJoCable/mujoco-cable-dynamics).
+Build it there with `python docs/site/build.py`, then copy the generated
+`docs/site/_build/html/` into this repository's `docs/` directory, preserving
+the existing `docs/windows/` tutorial sources. Do not edit generated HTML.
+
+The manual includes installation, MJCF modeling, actuation, routing, friction,
+interfaces, sensor reference, validation and downloadable model/video/data
+resources. Homepage access is added by `assets/documentation-links.js` without
+modifying the compiled React bundle.
+
 ## Windows tutorial
 
 - English (default): <https://mujocable.github.io/tutorials/windows/>
