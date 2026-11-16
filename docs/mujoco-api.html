@@ -1,0 +1,646 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="索引" href="genindex.html"><link rel="search" title="搜索" href="search.html"><link rel="next" title="XML 配置参考" href="reference.html"><link rel="prev" title="MuJoCo 接口与架构" href="architecture.html">
+        <link rel="canonical" href="https://mujocable.github.io/docs/mujoco-api.html">
+
+    <link rel="shortcut icon" href="_static/favicon.jpg"><!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
+        <title>MuJoCo 接口速查：绳驱与并联机器人 - MuJoCable Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/katex/katex.min.css?v=83223527" />
+    <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=05624691" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/manual.css?v=305cf3c3" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #177348;
+  --color-brand-content: #177348;
+  --font-stack: -apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans CJK SC','Microsoft YaHei',sans-serif;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #80cba1;
+  --color-brand-content: #80cba1;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #80cba1;
+  --color-brand-content: #80cba1;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">MuJoCable Documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">MuJoCable Documentation</span>
+  
+</a>
+<nav class="language-switch" aria-label="Documentation language">
+  
+  <a href="#" lang="zh-CN" hreflang="zh-CN" aria-current="page">中文</a>
+  <a href="en/mujoco-api.html" lang="en" hreflang="en">English</a>
+  
+</nav><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">使用手册</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">安装与运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">第一个绳驱模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modeling.html">MJCF 建模结构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actuation.html">如何驱动与收放绳</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routing.html">绳路、参考点与 mesh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="friction.html">表面摩擦与孔口</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sensors.html">传感器与 Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">调试与常见问题</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">原理与接口</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="computation.html">计算与物理模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">MuJoCo 接口与架构</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">MuJoCo 接口速查：绳驱与并联机器人</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">XML 配置参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limitations.html">能力边界</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">案例与资源</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gallery.html">案例库</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="_generated/case_index.html">案例详情</a><input aria-label="Toggle navigation of 案例详情" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="_generated/fixed.html">固定滑轮与 Capstan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/free_sheave.html">带惯量的自由滑轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/winch.html">卷轴与半径传动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/moving.html">动滑轮与提升</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/atwood.html">Atwood 与落地松弛</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/rolling.html">Faive 非圆面滚动关节</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/spirobs.html">SpiRobs 与 native 对照</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/friction.html">五组摩擦与逐关节弯曲</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/finger.html">单指六索与差动驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/calibrated.html">双向完全弯曲与舵机表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/ellipse.html">椭圆滑轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/cam.html">非对称凸轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/box.html">圆角长方体滑轮</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_generated/icra.html">ICRA 多 mesh 连续包络</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">验证与复现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downloads.html">下载与教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="english.html">English Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">文档版本</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="mujoco">
+<h1>MuJoCo 接口速查：绳驱与并联机器人<a class="headerlink" href="#mujoco" title="链接到此标题。">¶</a></h1>
+<p><strong>来源与版本。</strong> 本页依据 <a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/overview.html">MuJoCo 3.4.0 官方文档（Google DeepMind）</a> 整理，按机器人建模任务重组，示例为 MuJoCable 编写。下文的原生接口以 <strong>3.4.0</strong> 为准；使用其他版本时，请切换到<a class="reference external" href="https://mujoco.readthedocs.io/en/stable/">官方文档</a>的对应版本。MuJoCable 专用配置单独标注。</p>
+<section id="id1">
+<h2>按机构选接口<a class="headerlink" href="#id1" title="链接到此标题。">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>任务</p></th>
+<th class="head"><p>首选接口</p></th>
+<th class="head"><p>建模边界</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>串联臂、欠驱动手指</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">body/joint</span></code>；对需要驱动的关节、卷轴或 tendon 配置 <code class="docutils literal notranslate"><span class="pre">actuator</span></code></p></td>
+<td><p>被动关节不加电机；在 MJCF 树上给出真实轴线和惯量。</p></td>
+</tr>
+<tr class="row-odd"><td><p>四杆、Delta、Stewart、平行夹爪</p></td>
+<td><p>用 <code class="docutils literal notranslate"><span class="pre">body/joint</span></code> 建开链，用 <code class="docutils literal notranslate"><span class="pre">equality/connect</span></code> 或 <code class="docutils literal notranslate"><span class="pre">equality/weld</span></code> 闭合；用 <code class="docutils literal notranslate"><span class="pre">equality/joint</span></code> 表示齿轮比例等标量耦合</p></td>
+<td><p>实体闭链与绳索闭合不是一回事。理想比例约束不等于齿面接触和摩擦。</p></td>
+</tr>
+<tr class="row-even"><td><p>缆索并联机器人（CDPR）、张拉结构</p></td>
+<td><p>平台用 <code class="docutils literal notranslate"><span class="pre">freejoint</span></code> 或所需的平面关节；每条索分别建 <code class="docutils literal notranslate"><span class="pre">tendon/spatial</span></code> 或 MuJoCable 实例</p></td>
+<td><p>张力只能拉。不要用每条绳的双边等式替代松弛；检查张力可行性、预紧和失张后的运动。</p></td>
+</tr>
+<tr class="row-odd"><td><p>简单绳路、滑轮组基线</p></td>
+<td><p>原生 <code class="docutils literal notranslate"><span class="pre">tendon/spatial</span></code> 按顺序使用 <code class="docutils literal notranslate"><span class="pre">site</span></code>、球/圆柱 <code class="docutils literal notranslate"><span class="pre">geom</span></code>；<code class="docutils literal notranslate"><span class="pre">pulley</span></code> 可定义分支长度倍率</p></td>
+<td><p>原生 <code class="docutils literal notranslate"><span class="pre">pulley</span></code> 是长度分支，不是有惯量、轴承和可转动绳槽的刚体。</p></td>
+</tr>
+<tr class="row-even"><td><p>绕不规则面、分段摩擦、卷扬放绳</p></td>
+<td><p>MuJoCable <code class="docutils literal notranslate"><span class="pre">surface</span></code> 路由；用 body/hinge 表示物理滑轮或卷轴</p></td>
+<td><p>只计算指定的包络体和导向；不自动获得自由悬垂、孔壁三维接触或任意拓扑切换。</p></td>
+</tr>
+<tr class="row-odd"><td><p>滚动关节、孔口和柔性体</p></td>
+<td><p>实体接触用 <code class="docutils literal notranslate"><span class="pre">geom</span></code>、组合代理或 <code class="docutils literal notranslate"><span class="pre">flex</span></code>；绳路另用包络面、真实 guide 或孔口模型</p></td>
+<td><p>碰撞面、可见 mesh 和绳索包络面可不同。不能从 STL 上存在孔推断原生 mesh 碰撞会保留孔。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="mjcf">
+<h2>MJCF 格式、单位与坐标<a class="headerlink" href="#mjcf" title="链接到此标题。">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>层级</p></th>
+<th class="head"><p>常用元素或属性</p></th>
+<th class="head"><p>约定</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>模型与资源</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;mujoco&gt;</span></code>、<code class="docutils literal notranslate"><span class="pre">compiler</span></code>、<code class="docutils literal notranslate"><span class="pre">option</span></code>、<code class="docutils literal notranslate"><span class="pre">size</span></code>、<code class="docutils literal notranslate"><span class="pre">default/class</span></code>、<code class="docutils literal notranslate"><span class="pre">include</span></code>、<code class="docutils literal notranslate"><span class="pre">asset/mesh</span></code>、<code class="docutils literal notranslate"><span class="pre">asset/material</span></code></p></td>
+<td><p>用相对文件路径；核对 <code class="docutils literal notranslate"><span class="pre">meshdir</span></code>、<code class="docutils literal notranslate"><span class="pre">scale</span></code> 和 CAD 原点。<code class="docutils literal notranslate"><span class="pre">default</span></code> 统一复用属性，<code class="docutils literal notranslate"><span class="pre">childclass</span></code> 可传给子级。</p></td>
+</tr>
+<tr class="row-odd"><td><p>刚体与参考点</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">worldbody/body</span></code>、<code class="docutils literal notranslate"><span class="pre">inertial</span></code>、<code class="docutils literal notranslate"><span class="pre">geom</span></code>、<code class="docutils literal notranslate"><span class="pre">site</span></code>、<code class="docutils literal notranslate"><span class="pre">camera</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">body</span> <span class="pre">pos</span></code> 相对父坐标系，其子元素用所属刚体的局部坐标；<code class="docutils literal notranslate"><span class="pre">site</span></code> 自身不是碰撞体。需要精确质量和质心时显式设 <code class="docutils literal notranslate"><span class="pre">inertial</span></code>。</p></td>
+</tr>
+<tr class="row-even"><td><p>关节</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hinge</span></code>、<code class="docutils literal notranslate"><span class="pre">slide</span></code>、<code class="docutils literal notranslate"><span class="pre">ball</span></code>、<code class="docutils literal notranslate"><span class="pre">freejoint</span></code>；<code class="docutils literal notranslate"><span class="pre">axis</span></code>、<code class="docutils literal notranslate"><span class="pre">pos</span></code>、<code class="docutils literal notranslate"><span class="pre">limited/range</span></code>、<code class="docutils literal notranslate"><span class="pre">ref</span></code>、<code class="docutils literal notranslate"><span class="pre">stiffness/springref</span></code>、<code class="docutils literal notranslate"><span class="pre">damping</span></code>、<code class="docutils literal notranslate"><span class="pre">armature</span></code>、<code class="docutils literal notranslate"><span class="pre">frictionloss</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hinge</span></code> 和 <code class="docutils literal notranslate"><span class="pre">slide</span></code> 是标量自由度；空间自由刚体的 <code class="docutils literal notranslate"><span class="pre">freejoint</span></code> 放在 <code class="docutils literal notranslate"><span class="pre">worldbody</span></code> 的直接子刚体上。不要把 <code class="docutils literal notranslate"><span class="pre">armature</span></code> 当作轴承阻尼。</p></td>
+</tr>
+<tr class="row-odd"><td><p>交叉引用</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tendon</span></code>、<code class="docutils literal notranslate"><span class="pre">equality</span></code>、<code class="docutils literal notranslate"><span class="pre">contact</span></code>、<code class="docutils literal notranslate"><span class="pre">actuator</span></code>、<code class="docutils literal notranslate"><span class="pre">sensor</span></code>、<code class="docutils literal notranslate"><span class="pre">keyframe/key</span></code></p></td>
+<td><p>用有语义的名称引用对象，例如 <code class="docutils literal notranslate"><span class="pre">thumb_tip_anchor</span></code>、<code class="docutils literal notranslate"><span class="pre">winch_hinge</span></code>。<code class="docutils literal notranslate"><span class="pre">key</span></code> 可记录 <code class="docutils literal notranslate"><span class="pre">qpos</span></code>、<code class="docutils literal notranslate"><span class="pre">qvel</span></code>、<code class="docutils literal notranslate"><span class="pre">ctrl</span></code> 等初始条件。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>统一采用 m、kg、s、N、N·m，并在教程 XML 中显式设 <code class="docutils literal notranslate"><span class="pre">&lt;compiler</span> <span class="pre">angle=&quot;radian&quot;/&gt;</span></code>。没有显式设定时，MJCF 的默认角度输入通常为度；运行时的 <code class="docutils literal notranslate"><span class="pre">qpos</span></code> 铰链角和 <code class="docutils literal notranslate"><span class="pre">qvel</span></code> 角速度使用 rad 与 rad/s。<code class="docutils literal notranslate"><span class="pre">compiler</span> <span class="pre">angle</span></code> <strong>不负责换算控制输入</strong>。<code class="docutils literal notranslate"><span class="pre">quat</span></code> 顺序为 <code class="docutils literal notranslate"><span class="pre">w</span> <span class="pre">x</span> <span class="pre">y</span> <span class="pre">z</span></code>；可移动平台 <code class="docutils literal notranslate"><span class="pre">freejoint</span></code> 占 7 个 <code class="docutils literal notranslate"><span class="pre">qpos</span></code> 和 6 个 <code class="docutils literal notranslate"><span class="pre">qvel</span></code> 元素，不要逐元素对四元数作平移式积分。</p>
+<p>官方参考：<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/XMLreference.html">MJCF XML</a>、<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/modeling.html#coordinate-frames">建模与坐标系</a>。</p>
+</section>
+<section id="id2">
+<h2>绳路、卷轴与控制量<a class="headerlink" href="#id2" title="链接到此标题。">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>接口</p></th>
+<th class="head"><p>关键字段</p></th>
+<th class="head"><p>怎么用</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>原生 <code class="docutils literal notranslate"><span class="pre">tendon/spatial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">site/&#64;site</span></code>、<code class="docutils literal notranslate"><span class="pre">geom/&#64;geom</span></code>、<code class="docutils literal notranslate"><span class="pre">sidesite</span></code>、<code class="docutils literal notranslate"><span class="pre">pulley/&#64;divisor</span></code></p></td>
+<td><p>真实 via site 运行时始终在线路上；<code class="docutils literal notranslate"><span class="pre">sidesite</span></code> 是原生包络侧参考，不是 via。3.4.0 原生包络对象是球/圆柱，连续两个包络 geom 之间需要 site。</p></td>
+</tr>
+<tr class="row-odd"><td><p>原生 <code class="docutils literal notranslate"><span class="pre">tendon/fixed</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;joint</span> <span class="pre">joint=&quot;…&quot;</span> <span class="pre">coef=&quot;…&quot;/&gt;</span></code></p></td>
+<td><p>标量关节坐标的加权和；适合虚拟差动或耦合，不生成三维绕线路径。</p></td>
+</tr>
+<tr class="row-even"><td><p>原生张力基线</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">limited</span></code>、<code class="docutils literal notranslate"><span class="pre">range</span></code>、<code class="docutils literal notranslate"><span class="pre">springlength</span></code>、<code class="docutils literal notranslate"><span class="pre">stiffness</span></code>、<code class="docutils literal notranslate"><span class="pre">damping</span></code>、<code class="docutils literal notranslate"><span class="pre">frictionloss</span></code></p></td>
+<td><p>只研究几何上限可设 <code class="docutils literal notranslate"><span class="pre">limited=&quot;true&quot;</span> <span class="pre">range=&quot;0</span> <span class="pre">Lmax&quot;</span></code>（将 <code class="docutils literal notranslate"><span class="pre">Lmax</span></code> 换成数值）；在过长侧产生约束反力。普通弹簧和阻尼并不自动等价于含松弛判定的单边绳，<code class="docutils literal notranslate"><span class="pre">frictionloss</span></code> 也不是包角摩擦。</p></td>
+</tr>
+<tr class="row-odd"><td><p>原生 actuator</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">motor</span></code>、<code class="docutils literal notranslate"><span class="pre">position</span></code>、<code class="docutils literal notranslate"><span class="pre">velocity</span></code>、<code class="docutils literal notranslate"><span class="pre">general</span></code>、<code class="docutils literal notranslate"><span class="pre">muscle</span></code>；<code class="docutils literal notranslate"><span class="pre">joint/tendon/site</span></code>、<code class="docutils literal notranslate"><span class="pre">gear</span></code>、<code class="docutils literal notranslate"><span class="pre">ctrlrange</span></code>、<code class="docutils literal notranslate"><span class="pre">forcerange</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ctrl</span></code> 可表示力指令、位置/速度参考或肌肉激励，取决于执行器及传动；<code class="docutils literal notranslate"><span class="pre">ctrlrange</span></code> 限制输入，<code class="docutils literal notranslate"><span class="pre">forcerange</span></code> 限制执行器标量输出。</p></td>
+</tr>
+<tr class="row-even"><td><p>MuJoCable 绳路</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">route_mode</span></code>、<code class="docutils literal notranslate"><span class="pre">route_tendon</span></code>、<code class="docutils literal notranslate"><span class="pre">wrap_geoms</span></code>；<code class="docutils literal notranslate"><span class="pre">site</span> <span class="pre">user</span></code> 角色</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">surface</span></code> 中端点 <code class="docutils literal notranslate"><span class="pre">1</span></code>、初始化 hint <code class="docutils literal notranslate"><span class="pre">2</span></code>、真实 guide <code class="docutils literal notranslate"><span class="pre">3</span></code> 各有不同作用。<code class="docutils literal notranslate"><span class="pre">gear=&quot;0&quot;</span></code> 避免原生 seed 再施一次力，不能用 seed 的原生长度替代插件实际绳长。</p></td>
+</tr>
+<tr class="row-odd"><td><p>MuJoCable 驱动与摩擦</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">target_contraction</span></code>、<code class="docutils literal notranslate"><span class="pre">joint_spool_angle</span></code>、<code class="docutils literal notranslate"><span class="pre">capstan_mu</span></code> 等</p></td>
+<td><p>位移输入、卷轴角度、轴承阻尼、绳/轮摩擦是不同物理量。固定半径卷轴可用 <span class="math">\(\Delta c=\pm r\,\Delta\theta\)</span> 做符号/单位校验；正负取决于绕向。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>最小原生例子。</strong> 下载 <a href="downloads/mujoco_native_cable.xml" download>mujoco_native_cable.xml</a>；圆柱固定、载荷沿 slide 运动。<code class="docutils literal notranslate"><span class="pre">pull</span></code> 是单位增益 motor，<code class="docutils literal notranslate"><span class="pre">gear=&quot;-1&quot;</span></code> 使正输入趋向缩短绳路。这个例子施加受控拉力，<strong>不是</strong>带松弛本构的卷扬。</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nt">&lt;tendon&gt;</span>
+<span class="w">    </span><span class="nt">&lt;spatial</span><span class="w"> </span><span class="na">name=</span><span class="s">"cable"</span><span class="w"> </span><span class="na">width=</span><span class="s">"0.002"</span><span class="w"> </span><span class="na">rgba=</span><span class="s">"0.8 0.2 0.08 1"</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;site</span><span class="w"> </span><span class="na">site=</span><span class="s">"fixed_end"</span><span class="nt">/&gt;</span>
+<span class="w">      </span><span class="nt">&lt;geom</span><span class="w"> </span><span class="na">geom=</span><span class="s">"pulley"</span><span class="w"> </span><span class="na">sidesite=</span><span class="s">"upper_side"</span><span class="nt">/&gt;</span>
+<span class="w">      </span><span class="nt">&lt;site</span><span class="w"> </span><span class="na">site=</span><span class="s">"moving_end"</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/spatial&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/tendon&gt;</span>
+<span class="w">  </span><span class="nt">&lt;actuator&gt;</span>
+<span class="w">    </span><span class="nt">&lt;motor</span><span class="w"> </span><span class="na">name=</span><span class="s">"pull"</span><span class="w"> </span><span class="na">tendon=</span><span class="s">"cable"</span><span class="w"> </span><span class="na">gear=</span><span class="s">"-1"</span><span class="w"> </span><span class="na">ctrllimited=</span><span class="s">"true"</span><span class="w"> </span><span class="na">ctrlrange=</span><span class="s">"0 4"</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/actuator&gt;</span>
+</pre></div>
+</div>
+<p>官方参考：<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/XMLreference.html#tendon-spatial">原生 spatial tendon</a>、<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/computation/index.html#actuation-model">执行器计算</a>。插件特有设置见<a class="reference internal" href="routing.html"><span class="std std-doc">绳路</span></a>、<a class="reference internal" href="actuation.html"><span class="std std-doc">驱动</span></a>和<a class="reference internal" href="friction.html"><span class="std std-doc">摩擦</span></a>。</p>
+<p><strong>并联平台的张力检查。</strong> 对无摩擦且各段等张力的绳，将长度雅可比定义为 <span class="math">\(\dot{\boldsymbol L}=J_L\boldsymbol v\)</span>。该组绳产生的广义力为 <span class="math">\(\boldsymbol\tau=-J_L^\mathsf{T}\boldsymbol T\)</span>。检查期望广义力能否由满足 <span class="math">\(0\le T_i\le T_{i,\max}\)</span> 的张力实现，而不是只看矩阵秩。直线绳的长度导数可由两端 <code class="docutils literal notranslate"><span class="pre">mj_jacSite</span></code> 和绳方向求得；多表面路径则应基于实际路线，不能用 seed 长度求导来代替。存在分段摩擦时，也不能用一个全绳等张力标量替代分段受力。</p>
+</section>
+<section id="id3">
+<h2>闭链、接触与柔性<a class="headerlink" href="#id3" title="链接到此标题。">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>目的</p></th>
+<th class="head"><p>接口与格式</p></th>
+<th class="head"><p>调试重点</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>两条支链在一点相接</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">equality/connect</span> <span class="pre">site1=&quot;a&quot;</span> <span class="pre">site2=&quot;b&quot;</span></code>；或 <code class="docutils literal notranslate"><span class="pre">body1/body2/anchor</span></code> 写法</p></td>
+<td><p>site 方式约束两点重合，不锁相对姿态。闭链初始位姿应先对齐，避免启动冲击。</p></td>
+</tr>
+<tr class="row-odd"><td><p>固定两支链相对姿态</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">equality/weld</span></code>；<code class="docutils literal notranslate"><span class="pre">site1/site2</span></code> 对齐两坐标系，或用 <code class="docutils literal notranslate"><span class="pre">body1/body2/relpose</span></code></p></td>
+<td><p>与开放树中“同一刚体上无关节地刚接”区分；weld 增加约束，不能用来替代滚动轴承。</p></td>
+</tr>
+<tr class="row-even"><td><p>理想比例、定长或联动</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">equality/joint</span> <span class="pre">joint1=&quot;a&quot;</span> <span class="pre">joint2=&quot;b&quot;</span> <span class="pre">polycoef=&quot;0</span> <span class="pre">1</span> <span class="pre">0</span> <span class="pre">0</span> <span class="pre">0&quot;</span></code>；<code class="docutils literal notranslate"><span class="pre">equality/tendon</span> <span class="pre">tendon1=&quot;a&quot;</span> <span class="pre">tendon2=&quot;b&quot;</span></code></p></td>
+<td><p>标量关节或原生绳长的关系按参考构型偏差解释。等式是双边的；不要约束 MuJoCable 的 seed 来冒充实际绳长约束。</p></td>
+</tr>
+<tr class="row-odd"><td><p>接触与排除</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">geom</span> <span class="pre">contype/conaffinity/condim/friction</span></code>；<code class="docutils literal notranslate"><span class="pre">contact/pair</span> <span class="pre">geom1/geom2</span></code>；<code class="docutils literal notranslate"><span class="pre">contact/exclude</span> <span class="pre">body1/body2</span></code></p></td>
+<td><p>动态配对要核对掩码，还要看同体/父子等过滤；<code class="docutils literal notranslate"><span class="pre">pair</span></code> 可显式指定一对几何与接触参数。<code class="docutils literal notranslate"><span class="pre">geom</span> <span class="pre">friction</span></code> 的三项对应滑动、扭转和滚动，第三项不是接触几何的纯滚动约束。</p></td>
+</tr>
+<tr class="row-even"><td><p>非凸、孔以及材料柔顺</p></td>
+<td><p>碰撞用复合几何或合适的 <code class="docutils literal notranslate"><span class="pre">flexcomp/flex</span></code>；柔性梁的低阶模型可用 <code class="docutils literal notranslate"><span class="pre">joint</span> <span class="pre">stiffness/damping</span></code></p></td>
+<td><p>常规 mesh geom 碰撞使用凸表示，显示的 STL 可非凸。标定等效铰链刚度，或独立验证 flex 的材料参数及网格收敛。</p></td>
+</tr>
+<tr class="row-odd"><td><p>数值稳定性</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">option</span> <span class="pre">timestep/integrator/solver/iterations/tolerance</span></code>、约束 <code class="docutils literal notranslate"><span class="pre">solref/solimp</span></code></p></td>
+<td><p>正值 <code class="docutils literal notranslate"><span class="pre">solref</span></code> 形式为时间常数和阻尼比，<code class="docutils literal notranslate"><span class="pre">solimp</span></code> 调整约束阻抗。先查几何与约束秩，再减小步长做收敛对照，不只增加迭代次数。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>最小闭链例子。</strong> 下载 <a href="downloads/mujoco_four_bar.xml" download>mujoco_four_bar.xml</a>：用三根树内铰链和一个点闭合构成平面四杆。在非奇异构型下，三个标量关节坐标受两个独立平面闭合方程限制，剩一个有效自由度。调 <code class="docutils literal notranslate"><span class="pre">crank_target</span></code> 控制主动杆，比较 <code class="docutils literal notranslate"><span class="pre">data.site(&quot;coupler_tip&quot;).xpos</span></code> 与 <code class="docutils literal notranslate"><span class="pre">data.site(&quot;rocker_tip&quot;).xpos</span></code> 的距离。软约束在载荷下可有残差；不要把 <code class="docutils literal notranslate"><span class="pre">model.nv</span></code> 当成闭链机构独立自由度数。</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nt">&lt;equality&gt;</span>
+<span class="w">    </span><span class="nt">&lt;connect</span><span class="w"> </span><span class="na">name=</span><span class="s">"close_loop"</span><span class="w"> </span><span class="na">site1=</span><span class="s">"coupler_tip"</span><span class="w"> </span><span class="na">site2=</span><span class="s">"rocker_tip"</span>
+<span class="w">             </span><span class="na">solref=</span><span class="s">"0.01 1"</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/equality&gt;</span>
+</pre></div>
+</div>
+<p>两个模型均不依赖插件与外部资产。在文件所在目录运行（macOS；其他平台用 <code class="docutils literal notranslate"><span class="pre">python</span></code> 替换 <code class="docutils literal notranslate"><span class="pre">mjpython</span></code>）：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mjpython<span class="w"> </span>-m<span class="w"> </span>mujoco.viewer<span class="w"> </span>--mjcf<span class="o">=</span>mujoco_native_cable.xml
+mjpython<span class="w"> </span>-m<span class="w"> </span>mujoco.viewer<span class="w"> </span>--mjcf<span class="o">=</span>mujoco_four_bar.xml
+</pre></div>
+</div>
+<p>官方参考：<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/XMLreference.html#equality">Equality</a>、<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/XMLreference.html#contact">Contact</a>、<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/modeling.html#solver-parameters">约束参数</a>。</p>
+</section>
+<section id="python-c">
+<h2>Python 与 C 运行时<a class="headerlink" href="#python-c" title="链接到此标题。">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>阶段</p></th>
+<th class="head"><p>API / 数据</p></th>
+<th class="head"><p>读写规范</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>编译和重置</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MjModel.from_xml_path</span></code>（C：<code class="docutils literal notranslate"><span class="pre">mj_loadXML</span></code>）、<code class="docutils literal notranslate"><span class="pre">MjData(model)</span></code>（C：<code class="docutils literal notranslate"><span class="pre">mj_makeData</span></code>）、<code class="docutils literal notranslate"><span class="pre">mj_resetData</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_resetDataKeyframe</span></code></p></td>
+<td><p>插件模型加载前先注册动态库（<code class="docutils literal notranslate"><span class="pre">mj_loadPluginLibrary</span></code>）；重置或手改 <code class="docutils literal notranslate"><span class="pre">qpos/qvel</span></code> 后调用 <code class="docutils literal notranslate"><span class="pre">mj_forward</span></code> 更新派生量。</p></td>
+</tr>
+<tr class="row-odd"><td><p>信号输入与积分</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">data.ctrl</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_step</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_step1/mj_step2</span></code>、<code class="docutils literal notranslate"><span class="pre">mjcb_control</span></code></p></td>
+<td><p>先设输入再步进；依赖当前运动学反馈时可分步计算，但分步接口不能保留 RK4 的积分语义。</p></td>
+</tr>
+<tr class="row-even"><td><p>外力与扰动</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">qfrc_applied</span></code>、<code class="docutils literal notranslate"><span class="pre">xfrc_applied</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_applyFT</span></code></p></td>
+<td><p>前者按 <code class="docutils literal notranslate"><span class="pre">nv</span></code> 索引，后者按 body；<code class="docutils literal notranslate"><span class="pre">mj_applyFT</span></code> 可把指定世界位置的力和力矩累加到目标广义力数组。按实验约定撤销外力，写入值不会因一次步进自动清零。</p></td>
+</tr>
+<tr class="row-odd"><td><p>位姿、速度和雅可比</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mj_name2id</span></code>、<code class="docutils literal notranslate"><span class="pre">jnt_qposadr/jnt_dofadr</span></code>、<code class="docutils literal notranslate"><span class="pre">site_xpos/site_xmat</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_jacSite</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_objectVelocity</span></code></p></td>
+<td><p>关节 ID 不等于状态地址；雅可比列数用 <code class="docutils literal notranslate"><span class="pre">nv</span></code>。<code class="docutils literal notranslate"><span class="pre">mj_objectVelocity</span></code> 输出角速度在前、线速度在后，坐标朝向由 <code class="docutils literal notranslate"><span class="pre">flg_local</span></code> 决定。</p></td>
+</tr>
+<tr class="row-even"><td><p>接触与闭链</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ncon</span></code>、<code class="docutils literal notranslate"><span class="pre">contact</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_contactForce</span></code>、<code class="docutils literal notranslate"><span class="pre">eq_active</span></code>、<code class="docutils literal notranslate"><span class="pre">efc_type/efc_id/efc_pos/efc_force</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mj_contactForce</span></code> 返回接触坐标系中的六维力/矩；通过类型与 ID 找约束行，不用固定行号。启停闭合用 <code class="docutils literal notranslate"><span class="pre">data.eq_active[模型中的等式</span> <span class="pre">ID]</span></code>。</p></td>
+</tr>
+<tr class="row-odd"><td><p>系统分析与复现</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mj_getState/mj_setState</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_integratePos/mj_differentiatePos</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_inverse</span></code>、<code class="docutils literal notranslate"><span class="pre">mjd_transitionFD</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_mulM</span></code></p></td>
+<td><p>复现实验要记录状态位掩码与控制；姿态增量用四元数感知的 API；线性化在绳索松紧或接触切换附近应先验证局部有效性。</p></td>
+</tr>
+<tr class="row-even"><td><p>生成模型与交互</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MjSpec.from_file</span></code>、<code class="docutils literal notranslate"><span class="pre">spec.compile()</span></code>、<code class="docutils literal notranslate"><span class="pre">mujoco.viewer.launch_passive</span></code>、<code class="docutils literal notranslate"><span class="pre">viewer.sync()</span></code></p></td>
+<td><p>用 <code class="docutils literal notranslate"><span class="pre">MjSpec</span></code> 或结构化 XML 生成重复支链；改拓扑应重编译。使用被动 viewer 时由脚本推进物理并同步画面。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mujoco</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjModel</span><span class="o">.</span><span class="n">from_xml_path</span><span class="p">(</span><span class="s2">"mujoco_native_cable.xml"</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">d</span><span class="o">.</span><span class="n">actuator</span><span class="p">(</span><span class="s2">"pull"</span><span class="p">)</span><span class="o">.</span><span class="n">ctrl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_step</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="n">mujoco</span><span class="o">.</span><span class="n">mj_forward</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>  <span class="c1"># Recompute observations at the final state.</span>
+<span class="n">length_m</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">sensor</span><span class="p">(</span><span class="s2">"cable_length"</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">rate_m_s</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">sensor</span><span class="p">(</span><span class="s2">"cable_rate"</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">pull_N</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">sensor</span><span class="p">(</span><span class="s2">"pull_output"</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"L=</span><span class="si">{</span><span class="n">length_m</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> m, dL/dt=</span><span class="si">{</span><span class="n">rate_m_s</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> m/s, motor=</span><span class="si">{</span><span class="n">pull_N</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> N"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>官方参考：<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/python.html#named-access">Python API 与命名访问</a>、<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/APIreference/APIfunctions.html">C API Functions</a>、<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/APIreference/APItypes.html">C API Types</a>。</p>
+</section>
+<section id="id4">
+<h2>记录哪些量<a class="headerlink" href="#id4" title="链接到此标题。">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>要回答的问题</p></th>
+<th class="head"><p>记录接口</p></th>
+<th class="head"><p>注意事项</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>电机有没有按预期收绳？</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ctrl</span></code>、卷轴 <code class="docutils literal notranslate"><span class="pre">jointpos/jointvel</span></code>、<code class="docutils literal notranslate"><span class="pre">actuatorfrc</span></code> 或 <code class="docutils literal notranslate"><span class="pre">data.actuator_force</span></code></p></td>
+<td><p>记录输入单位、gear 和输出符号。原生执行器标量输出不等于关节力矩，更不等于所有分段的张力。</p></td>
+</tr>
+<tr class="row-odd"><td><p>绳长、速度、松弛是否正确？</p></td>
+<td><p>原生 <code class="docutils literal notranslate"><span class="pre">tendonpos/tendonvel</span></code> 或 <code class="docutils literal notranslate"><span class="pre">data.ten_length/ten_velocity</span></code>；插件用 <code class="docutils literal notranslate"><span class="pre">sensor/plugin</span></code></p></td>
+<td><p>插件应记录实际路由长度、自由长度、张力、<code class="docutils literal notranslate"><span class="pre">taut</span></code> 与路线状态；传感器维度从 <code class="docutils literal notranslate"><span class="pre">sensor_dim</span></code> 读，不硬编码索引到整个 <code class="docutils literal notranslate"><span class="pre">sensordata</span></code>。</p></td>
+</tr>
+<tr class="row-even"><td><p>闭链是否闭合，有没有打滑或穿模？</p></td>
+<td><p>两个 site 的世界坐标、<code class="docutils literal notranslate"><span class="pre">efc_pos/efc_force</span></code>、<code class="docutils literal notranslate"><span class="pre">contact</span></code>、<code class="docutils literal notranslate"><span class="pre">mj_contactForce</span></code></p></td>
+<td><p>报单位、坐标系和采样阶段。滚动要对比接触点相对切向速度；闭链残差与绳路残差分别记。</p></td>
+</tr>
+<tr class="row-odd"><td><p>末端位姿、夹持和基座反力如何？</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">framepos/framequat</span></code>、<code class="docutils literal notranslate"><span class="pre">framelinvel/frameangvel</span></code>、<code class="docutils literal notranslate"><span class="pre">touch</span></code>、<code class="docutils literal notranslate"><span class="pre">force/torque</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">touch</span></code> 是区域内接触法向力汇总；<code class="docutils literal notranslate"><span class="pre">force/torque</span></code> 是具有父子刚体语义的传感器，不等同于任意一对 geom 的接触力。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>做实物或基线对照时，先统一几何、质量惯量、初始姿态、输入单位、预紧和采样时间，再逐步切换绳路或摩擦建模方式。并联平台额外记录每根绳张力与任务空间扳手；对可能失张或接近奇异位姿的构型单独检查。日志同时记录 MuJoCo 版本、模型版本、插件版本和 <code class="docutils literal notranslate"><span class="pre">timestep</span></code>，瞬时状态用数组副本保存。</p>
+<p>官方参考：<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/XMLreference.html#sensor">Sensors</a>、<a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/programming/simulation.html">Simulation</a>。MuJoCable 的字段与回调见<a class="reference internal" href="sensors.html"><span class="std std-doc">传感器</span></a>和<a class="reference internal" href="architecture.html"><span class="std std-doc">接口与架构</span></a>；插件通用规范见 MuJoCo 官方 <a class="reference external" href="https://mujoco.readthedocs.io/en/3.4.0/programming/extension.html#engine-plugins">Engine plugins</a>。</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="reference.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">XML 配置参考</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="architecture.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">MuJoCo 接口与架构</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, MuJoCable contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">MuJoCo 接口速查：绳驱与并联机器人</a><ul>
+<li><a class="reference internal" href="#id1">按机构选接口</a></li>
+<li><a class="reference internal" href="#mjcf">MJCF 格式、单位与坐标</a></li>
+<li><a class="reference internal" href="#id2">绳路、卷轴与控制量</a></li>
+<li><a class="reference internal" href="#id3">闭链、接触与柔性</a></li>
+<li><a class="reference internal" href="#python-c">Python 与 C 运行时</a></li>
+<li><a class="reference internal" href="#id4">记录哪些量</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=404c0906"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=7654a337"></script>
+    <script src="_static/translations.js?v=540d3cec"></script>
+    <script src="_static/katex.min.js?v=5cc8ed51"></script>
+    <script src="_static/auto-render.min.js?v=af98beb9"></script>
+    <script src="_static/katex_autorenderer.js?v=bebc588a"></script>
+    <script src="_static/manual.js?v=226918b0"></script>
+    </body>
+</html>
